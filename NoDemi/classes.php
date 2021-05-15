@@ -723,18 +723,20 @@ class cursos {
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                
+                $redir = "redirect('chat.php?cur=" . $codigo . "&user=" . $row["usuario"] . "')";
 
                 $img_str = base64_encode($row["imagen"]);
                 if (!empty($row["imagen"])) {
                     $img = "data:image/jpg;base64," . $img_str;
                 }
-                echo '<div class="col-3">
+                echo '<div class="row no-gutters" onclick="' . $redir . '" style="cursor: pointer;"><div class="col-3">
                         <img src="' . $img . '"
                             alt="Avatar">
                         </div>
                         <div class="col-9 text-center m-auto text-wrap">
-                         ' . $row["usuario"] . '
-                      </div>';
+                         <h3>' . $row["usuario"] . '</h3>
+                      </div></div>';
             }
         } else {
             echo '<div class="informacion del maestro no disponible">este curso no cuenta con contenido</div>';

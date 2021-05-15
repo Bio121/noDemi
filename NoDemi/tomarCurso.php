@@ -10,7 +10,7 @@ and open the template in the editor.
 -->
 <html>
 
-<head>
+    <head>
         <link rel="stylesheet" href="css/style.css" media="screen">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
               integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -25,14 +25,13 @@ and open the template in the editor.
         crossorigin="anonymous"></script>
         <script src="js/scripts.js" ;></script>
         <meta charset="UTF-8">
-    <title>Novedades del Bot</title>
-</head>
+        <title>Novedades del Bot</title>
+    </head>
 
-<body>
+    <body>
 
-    <!-- NAVBAR -->
+        <!-- NAVBAR -->
         <?php
-        
         include "classes.php";
         $modalID = "comment";
         $curso = new cursos();
@@ -48,24 +47,23 @@ and open the template in the editor.
             if (array_key_exists('existent', $_POST)) {
                 $_SESSION["cursoActual"] = $_POST["existent"];
             }
-            
+
             if (array_key_exists('commentSubmit', $_POST)) {
-                
-            $comment = new comentarios($_POST["nivelId"]);
-            $contenido = $_POST["contenidoId"];
-            $nivel = $curso->getNivelArchivo($contenido);
-            $comment->newComment($_SESSION["usuario"], $_POST["commentText"]);
+
+                $comment = new comentarios($_POST["nivelId"]);
+                $contenido = $_POST["contenidoId"];
+                $nivel = $curso->getNivelArchivo($contenido);
+                $comment->newComment($_SESSION["usuario"], $_POST["commentText"]);
+            }
         }
 
-        }
-        
-        if(isset($_GET["c"])){
+        if (isset($_GET["c"])) {
             $contenido = $_GET["c"];
             $nivel = $curso->getNivelArchivo($_GET["c"]);
         }
-        
 
-$news = new mySQLphpClass();
+
+        $news = new mySQLphpClass();
         $result = $news->get_misCursos($_SESSION["cursoActual"], null);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -87,85 +85,100 @@ $news = new mySQLphpClass();
             header('Location: index.php');
         }
         ?>
-    <!-- FIN NAVBAR -->
+        <!-- FIN NAVBAR -->
 
-    <div class="contGlobal">
+        <script>
 
-        <div class="mainContentB" style="min-height: 50em;">
-            <div class="contariner">
+            $(document).ready(function () {
+                $(function () {
+                    $('[data-toggle="popover"]').popover();
+                });
+
+                $(".autor").popover({
+                    content: '<span class="popText px-3">Abrir chat con el maestro</span>',
+                    html: true
+                });
+            });
 
 
-                <div class="row">
+        </script>
+
+        <div class="contGlobal">
+
+            <div class="mainContentB" style="min-height: 50em;">
+                <div class="contariner">
 
 
-                    <div class="col-12">
+                    <div class="row">
 
-                        <?php $curso->archivoAMostrar($contenido)?>
-                        <div class="separador">Contenido</div>
-                        <div class="accordion" id="accordionExample">
-                            <?php
-                            $curso->nivelesCursosPaVer($_SESSION["cursoActual"]);
-                            ?>
-                        </div>
-                        <div class="separador">Datos del curso</div>
-                        <div>
+
+                        <div class="col-12">
+
+                            <?php $curso->archivoAMostrar($contenido) ?>
+                            <div class="separador">Contenido</div>
                             <div class="accordion" id="accordionExample">
-                                <div class="card">
-                                    <div class="card-header" id="ds">
-                                        <h2 class="mb-0">
-                                            <button class="btn" type="button" data-toggle="collapse"
-                                                data-target="#collapseZeroA" aria-expanded="true"
-                                                aria-controls="collapseZeroA">
-                                                Certificado
-                                            </button>
-                                        </h2>
-                                    </div>
+                                <?php
+                                $curso->nivelesCursosPaVer($_SESSION["cursoActual"]);
+                                ?>
+                            </div>
+                            <div class="separador">Datos del curso</div>
+                            <div>
+                                <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="card-header" id="ds">
+                                            <h2 class="mb-0">
+                                                <button class="btn" type="button" data-toggle="collapse"
+                                                        data-target="#collapseZeroA" aria-expanded="true"
+                                                        aria-controls="collapseZeroA">
+                                                    Certificado
+                                                </button>
+                                            </h2>
+                                        </div>
 
-                                    <div id="collapseZeroA" class="collapse" aria-labelledby="headingZeroA"
-                                        data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <button class="btn btn-primary btnConfig" type="submit"
-                                                onclick="redirect('Certificate.html')">Generar Certificado </button>
+                                        <div id="collapseZeroA" class="collapse" aria-labelledby="headingZeroA"
+                                             data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <button class="btn btn-primary btnConfig" type="submit"
+                                                        onclick="redirect('Certificate.html')">Generar Certificado </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header" id="ds">
+                                            <h2 class="mb-0">
+                                                <button class="btn" type="button" data-toggle="collapse"
+                                                        data-target="#collapseOneA" aria-expanded="true"
+                                                        aria-controls="collapseOneA">
+                                                    Descripcion del curso <?php echo $nombre ?>
+                                                </button>
+                                            </h2>
+                                        </div>
+
+                                        <div id="collapseOneA" class="collapse" aria-labelledby="headingOneA"
+                                             data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <p><?php echo $desc ?></p>
+                                                <br>
+                                            </div>
                                         </div>
                                     </div>
-
-                                </div>
-                                <div class="card">
-                                    <div class="card-header" id="ds">
-                                        <h2 class="mb-0">
-                                            <button class="btn" type="button" data-toggle="collapse"
-                                                data-target="#collapseOneA" aria-expanded="true"
-                                                aria-controls="collapseOneA">
-                                                Descripcion del curso <?php echo $nombre ?>
-                                            </button>
-                                        </h2>
-                                    </div>
-
-                                    <div id="collapseOneA" class="collapse" aria-labelledby="headingOneA"
-                                        data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <p><?php echo $desc ?></p>
-                                            <br>
+                                    <div class="card">
+                                        <div class="card-header" id="headingTwoA">
+                                            <h2 class="mb-0">
+                                                <button class="btn" type="button" data-toggle="collapse"
+                                                        data-target="#collapseTwoA" aria-expanded="false"
+                                                        aria-controls="collapseTwoA">
+                                                    Maestro
+                                                </button>
+                                            </h2>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="card">
-                                    <div class="card-header" id="headingTwoA">
-                                        <h2 class="mb-0">
-                                            <button class="btn" type="button" data-toggle="collapse"
-                                                data-target="#collapseTwoA" aria-expanded="false"
-                                                aria-controls="collapseTwoA">
-                                                Maestro
-                                            </button>
-                                        </h2>
-                                    </div>
-                                    <div id="collapseTwoA" class="collapse" aria-labelledby="headingTwoA"
-                                        data-parent="#accordionExample">
-                                        <div class="card-body">
-                                            <div class="row py-3">
-                                                <div class="col">
-                                                    <div class="autor">
-                                                        <div class="row no-gutters">
+                                        <div id="collapseTwoA" class="collapse" aria-labelledby="headingTwoA"
+                                             data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <div class="row py-3">
+                                                    <div class="col">
+                                                        <div class="autor" data-trigger="hover">
                                                             <?php echo $curso->getMaestroDelCurso($_SESSION["cursoActual"]) ?>
                                                         </div>
                                                     </div>
@@ -175,12 +188,12 @@ $news = new mySQLphpClass();
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                                        <!--SECCIÓN DE COMENTARIOS-->
-                 
-                 <?php  if($contenido > 0){ 
+                            <!--SECCIÓN DE COMENTARIOS-->
 
-                echo "<div class='row mt-3'>
+                            <?php
+                            if ($contenido > 0) {
+
+                                echo "<div class='row mt-3'>
                     <h3 class='mx-auto'>COMENTARIOS</h3> 
                 </div>
 
@@ -188,16 +201,16 @@ $news = new mySQLphpClass();
                 <div class='listaNotas overflow-auto my-2'>
 
                     ";
-                    $comentarios = new comentarios($nivel);
-                    $comentarios->cargarComentarios();
-                    echo "
+                                $comentarios = new comentarios($nivel);
+                                $comentarios->cargarComentarios();
+                                echo "
 
                 </div>
 
 
 
                 <div>
-                    <div class='commentBTN py-2' data-toggle='modal' data-target='#". $modalID . "'>
+                    <div class='commentBTN py-2' data-toggle='modal' data-target='#" . $modalID . "'>
                         <div class='center' >
                             <div class='row no-gutters'>
                                 <div class='col pl-4'>
@@ -230,9 +243,9 @@ $news = new mySQLphpClass();
                                 </button>
                             </div>
                             <form action='tomarCurso.php' method='post' enctype='multipart/form-data'>
-                                <div class='modal-body'>
+                                <div class='modal-body user-select-none'>
                                     <div class='user-select-none'>
-                                        <input type='text' class='form-control user-select-none' name='code' value='". $nivel ."' readonly='readonly' style='color: #e9ecef;'>
+                                        <input type='text' class='form-control user-select-none' name='code' value='" . $nivel . "' readonly='readonly' style='color: #e9ecef;'>
                                     </div>
                                     <div class='input-group'>
                                         <div class='input-group-prepend'>
@@ -243,19 +256,21 @@ $news = new mySQLphpClass();
                                 </div>
                                 <div class='modal-footer'>
                                     <button type='button' class='btn btn-secondary' data-dismiss='modal'>Volver</button>
-                                    <input type='hidden' id='nivelId' name='nivelId' value='". $nivel ."'>
-                                    <input type='hidden' id='contenidoId' name='contenidoId' value='". $contenido ."'>
+                                    <input type='hidden' id='nivelId' name='nivelId' value='" . $nivel . "'>
+                                    <input type='hidden' id='contenidoId' name='contenidoId' value='" . $contenido . "'>
                                     <button type='submit' class='btn btn-primary' name='commentSubmit' value='commentSubmit'>Comentar</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>";
-                
-                
-                 $comentarios->modales(); }?> 
 
-            </div>
+
+                                $comentarios->modales();
+                            }
+                            ?> 
+
+                        </div>
 
 
 
