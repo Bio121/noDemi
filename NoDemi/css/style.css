@@ -956,3 +956,58 @@ input[type="radio"]:checked ~ #estrella {
     margin-left: 6.6rem;
     color: #5a5a5a;
 }
+
+.chatCont{
+    background-color: #eadbf2;
+    height: 70vh;
+    width: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px 0 10px;
+}
+.chatInput{
+    background-color: #bc9dcd;
+    height: 5rem;
+    width: 100%;
+    display: flex;
+    padding-right: 15px;
+}
+.chatInput button{
+    border-radius: 50%
+}
+.chatSep{
+    background-color: #bc9dcd;
+    height: 0.5rem;
+    width: 100%;
+}
+
+.message{
+    background-color: #f3edf6;
+    width: fit-content;
+    max-width: 80%;
+    word-break: break-all;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.mesText{
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+    display: inline-block;
+}
+.mesDate{
+    text-align: end;
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+    display: inline-block;
+    align-self: flex-end;
+}
+.va{
+    border-radius: 20px 0 20px 20px;
+    background-color: #bc9dcd;
+    color: whitesmoke;
+    margin-left: auto;
+}
+.viene{
+    border-radius: 0 20px 20px 20px;
+}

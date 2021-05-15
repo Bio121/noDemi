@@ -278,7 +278,7 @@ class cursos {
             echo '<div class="emptyMessage text-muted">Sin resultados</div>';
         }
     }
-    
+
     function buscar2Categorias($buscar, $inicio, $fin, $fecha, $titulo, $dificultad, $precio, $categoria) {
         $timeinicio = "00:00:00";
         $timefin = "23:59:59";
@@ -298,7 +298,7 @@ class cursos {
         if ($dificultad == 3)
             $dif = "Experto";
         $conn = new mySQLphpClass();
-        $result = $conn->get_cursosBusqueda2Categoria($buscar, $inicio, $fin, $fecha, $titulo, $precio, $dif,$categoria);
+        $result = $conn->get_cursosBusqueda2Categoria($buscar, $inicio, $fin, $fecha, $titulo, $precio, $dif, $categoria);
         $img = '#';
         if ($result) {
             if ($result->num_rows > 0) {
@@ -328,7 +328,7 @@ class cursos {
             echo '<div class="emptyMessage text-muted">Sin resultados de esta categoria</div>';
         }
     }
-    
+
     function categoriasIguales($categoria, $dificultad, $cantidad) {
         $dif = "0";
         if ($dificultad == 1)
@@ -368,7 +368,7 @@ class cursos {
             echo '<div class="emptyMessage text-muted">Sin cursos relacionados</div>';
         }
     }
-    
+
     function categoriasIgualesCurso($cursoActual, $cantidad) {
         $conn = new mySQLphpClass();
         $result = $conn->get_cursoActualCategoriosos($cursoActual, $cantidad);
@@ -401,18 +401,17 @@ class cursos {
             echo '<div class="emptyMessage text-muted">Sin cursos relacionados</div>';
         }
     }
-    
+
     function compradoONo($usuario, $curso) {
         $conn = new mySQLphpClass();
         $result = $conn->compradoONo($usuario, $curso);
         if ($result) {
-            if ($result->num_rows > 0){
+            if ($result->num_rows > 0) {
                 echo 'disabled >no se puede comprado';
-            }
-            else{
+            } else {
                 echo ' >comprar';
             }
-        } 
+        }
     }
 
     function Vistas($cant) {
@@ -469,7 +468,7 @@ class cursos {
                 . $row["descripcion"] . '</p><div class="row no-gutters"><div class="col-10">
                       <p class="card-text"><small class="text-muted">Última actualización ' . $row["lastUpdate"] . '</small></p></div>
                       <div class="col-2"><form action="crearCurso.php" method="post" enctype="multipart/form-data" class="form-inline">
-                      <button type="submit" name="existent" value="' . $row["código"] . '" class="btn btn-secondary" >IR</button>
+                      <button type="submit" name="existent" value="' . $row["código"] . '" class="btn btn-secondary mb-3" >IR</button>
                       </form>
                       <form action="infoMisCursos.php" method="post" enctype="multipart/form-data" class="form-inline">
                       <button type="submit" name="Detalles" value="' . $row["código"] . '" class="btn btn-secondary" >Detalles</button>
@@ -479,7 +478,7 @@ class cursos {
             echo '<div class="emptyMessage text-muted">Parece que no has creado ningún curso</div>';
         }
     }
-    
+
     function misCursosDetalle($codigo, $usuario) {
         $conn = new mySQLphpClass();
         $result = $conn->get_misCursos($codigo, $usuario);
@@ -494,17 +493,17 @@ class cursos {
 
                 echo '<div class="row no-gutters">
                         <div class="col">
-                            <img src='. $img .' alt="Avatar" style="height: auto;">
+                            <img src=' . $img . ' alt="Avatar" style="height: auto;">
                         </div>
                     </div>
                     <div class="row no-gutters">
                         <div class="col py-2 text-center">
-                            <h3>'. $row["nombre"] .'</h3>
+                            <h3>' . $row["nombre"] . '</h3>
                         </div>
                     </div>
                     <div class="row no-gutters">
                         <div class="col px-2 text-center">
-                            <p>'. $row["descripcion"] .'</p>
+                            <p>' . $row["descripcion"] . '</p>
 
                         </div>
                     </div>';
@@ -517,16 +516,16 @@ class cursos {
     function alumnosGanancia($codigo) {
         $conn = new mySQLphpClass();
         $result = $conn->alumnosGanancia($codigo);
-        if ($result->num_rows > 0) { 
+        if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo '<p> Alumnos del curso: '. $row["alumnosTotal"] .' </p>';
-                echo '<p> Ganancia del curso: '. $row["ganancia"] .' $ </p>';
+                echo '<p> Alumnos del curso: ' . $row["alumnosTotal"] . ' </p>';
+                echo '<p> Ganancia del curso: ' . $row["ganancia"] . ' $ </p>';
             }
         } else {
             echo '<div class="emptyMessage text-muted">Parece que no has creado ningún curso</div>';
         }
     }
-    
+
     function misCursosComprados($usuario) {
         $conn = new mySQLphpClass();
         $result = $conn->get_misCursosComprados($usuario);
@@ -695,7 +694,8 @@ class cursos {
                 if (!empty($row["imagen"])) {
                     $img = "data:image/jpg;base64," . $img_str;
                 }
-                echo '<div class="card listaCard" onclick="Redirect("...")">
+                $redir = "redirect('chat.php?cur=" . $row['curso_id'] . "&user=" . $row['usuario'] . "')";
+                echo '<div class="card listaCard" onclick="' . $redir . '">
                                 <div class="row no-gutters">
                                     <div class="col-md-4">
                                         <img src="' . $img . '"
@@ -707,7 +707,7 @@ class cursos {
                                             <p class="card-text">
                                                 estudiando el curso ' . $row["nombre"] . '.
                                             </p>
-
+                                            <p> ' . $row["curso_id"] . '</p>
                                         </div>
                                     </div>
                                 </div>
@@ -742,7 +742,7 @@ class cursos {
     }
     function misAlumnosCurso($usuario,$curso) {
         $conn = new mySQLphpClass();
-        $result = $conn->misAlumnosCursos($usuario,$curso);
+        $result = $conn->misAlumnosCursos($usuario, $curso);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
@@ -772,10 +772,10 @@ class cursos {
             echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
         }
     }
-    
-    function cursosVNC($cantidad,$opc) {
+
+    function cursosVNC($cantidad, $opc) {
         $conn = new mySQLphpClass();
-        $result = $conn->cursosVNC($cantidad,$opc);
+        $result = $conn->cursosVNC($cantidad, $opc);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
@@ -796,20 +796,20 @@ class cursos {
             echo '<div class="emptyMessage text-muted">por el momento no contamos con cursos vendidos</div>';
         }
     }
-    
+
     function ventasTotal($usuario) {
         $conn = new mySQLphpClass();
         $result = $conn->ventasTotal($usuario);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo '<p> Alumnos Totales: '. $row["alumnosTotal"] .' </p>';
-                echo '<p> Ganancia Totales: $ '. $row["ganancia"] .'</p>';
+                echo '<p> Alumnos Totales: ' . $row["alumnosTotal"] . ' </p>';
+                echo '<p> Ganancia Totales: $ ' . $row["ganancia"] . '</p>';
             }
         } else {
             echo '<div class="emptyMessage text-muted">Este curso no cuenta con contenido</div>';
         }
     }
-    
+
     function lasNoticias($orden, $estado) {
         $conn = new mySQLphpClass();
         $result = $conn->get_lasNoticias($orden, $estado, null);

@@ -241,13 +241,9 @@ class mySQLphpClass extends configSQLphp {
         return $result;
     }
 
-    function get_noticiasNew($cant) {
+    function get_user($user) {
         $this->connect();
-        if ($cant == null) {
-            $sql = "call proc_noticiasNew(null);";
-        } else {
-            $sql = "call proc_noticiasNew(" . $cant . ");";
-        }
+        $sql = "call proc_getUser({$this->varQuery($user)})";
         $result = $this->connectionString->query($sql);
         $this->byebye();
         return $result;
