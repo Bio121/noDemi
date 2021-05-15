@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+<head>
+    <link rel="stylesheet" href="css/style.css" media="screen">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+    <script src="js/scripts.js" ;></script>
+    <meta charset="UTF-8">
+    <title>Novedades del Bot</title>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class='nav navbar navbar-expand-lg navbar-dark fixed-top fixed-top-2'>
+        <form action='buscar.html' method='get' class='form-inline ml-auto'>
+            <div class='md-form my-0'>
+                <input class='form-control' type='text' name='busqueda' id='busqueda' placeholder='Search'
+                    aria-label='Search'>
+            </div>
+            <button href='#!' class='btn btn-primary btn-outline-white btn-md my-0 ml-sm-2'
+                type='submit'>Buscar</button>
+        </form>
+    </nav>
+
+    <nav class="nav navbar navbar-expand-lg navbar-dark fixed-top">
+        <a class="navbar-brand" href="index.html">NoDemi</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse navbar-right" id="navbarNavAltMarkup">
+
+            <div class="dropdown ml-auto iniciarSesionDrop">
+                <button class="btn btn-secondary dropdown-toggle pull-right" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    iniciar sesion
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <form class="px-4 py-3" action="ConfigUser.html" onsubmit="return validacionInicioSesion()">
+                        <div class="form-group">
+                            <label for="emailIniciarSecion">Email</label>
+                            <input type="email" class="form-control" id="emailIniciarSesion"
+                                placeholder="email@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="usuarioIniciarSesion">Usuario</label>
+                            <input type="text" class="form-control" id="usuarioIniciarSesion" placeholder="Usuario">
+                        </div>
+                        <div class="form-group">
+                            <label for="contraseñaIniciarSesion">Contraseña</label>
+                            <input type="password" class="form-control" id="contraseñaIniciarSesion"
+                                placeholder="Contraseña">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                    </form>
+
+                </div>
+
+
+            </div>
+
+            <div class="dropdown RegistrarseDrop">
+                <button class="btn btn-secondary dropdown-toggle pull-right" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Registrarse
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <form class="px-4 py-3" onsubmit="return validacionRegistrarse()">
+                        <div class="form-group">
+                            <label for="emailRegistrarse">Email</label>
+                            <input type="email" class="form-control" id="emailRegistrarse"
+                                placeholder="email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="usuarioRegistrarse">Usuario</label>
+                            <input type="text" class="form-control" id="usuarioRegistrarse" placeholder="Usuario">
+                        </div>
+                        <div class="form-group">
+                            <label for="contraseñaRegistrarse">Contraseña</label>
+                            <input type="password" class="form-control" id="contraseñaRegistrarse"
+                                placeholder="Contraseña">
+                        </div>
+                        <div class="form-group">
+                            <label for="contraseñaConfirmarRegistrarse">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="contraseñaConfirmarRegistrarse"
+                                placeholder="Confirmar Contraseña">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Registrarse</button>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </nav>
+    <!-- FIN NAVBAR -->
+
+    <div class="contGlobal">
+
+        <div class="mainContentB" style="min-height: 50em;">
+            <div class="contariner">
+
+
+                <div class="row">
+
+
+                    <div class="col-12">
+                        <video class="videoClase" controls>
+                            <source src="" type="video/mp4">
+
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="separador">Contenido</div>
+                        <div class="accordion" id="accordionExample">
+                            <div class="card">
+                                <div class="card-header" id="ds">
+                                    <h2 class="mb-0">
+                                        <button class="btn" type="button" data-toggle="collapse"
+                                            data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            introduccion
+                                        </button>
+                                    </h2>
+                                </div>
+
+                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                                    data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <form action="buscar.php" method="get" class="">
+
+                                            <input type="checkbox" id="opcFecha" name="opcFecha" value="1">
+                                            <label for="opcNovato" class="pr-3"> Quien soy</label>
+                                            <br>
+                                            <input type="checkbox" id="opcTitulo" name="opcTitulo" value="1">
+                                            <label for="opcMedio" class="pr-3"> introduccion a la animacion</label>
+                                            <br>
+                                            <input type="checkbox" id="opcPalabra" name="opcPalabra" value="1">
+                                            <label for="opcExperto" class="pr-3"> herramientas a utilizar</label>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header" id="headingTwo">
+                                    <h2 class="mb-0">
+                                        <button class="btn" type="button" data-toggle="collapse"
+                                            data-target="#collapseTwo" aria-expanded="false"
+                                            aria-controls="collapseTwo">
+                                            Fundamentos
+                                        </button>
+                                    </h2>
+                                </div>
+                                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                                    data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <form action="buscar.php" method="get" class="">
+
+                                            <input type="checkbox" id="opcFecha" name="opcFecha" value="1">
+                                            <label for="opcPaga" class="pr-3"> Teoria del color</label>
+                                            <br>
+                                            <input type="checkbox" id="opcTitulo" name="opcTitulo" value="1">
+                                            <label for="opcGratuito" class="pr-3"> Herramientas</label>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="separador">Datos del curso</div>
+                        <div>
+                            <div class="accordion" id="accordionExample">
+                                <div class="card">
+                                    <div class="card-header" id="ds">
+                                        <h2 class="mb-0">
+                                            <button class="btn" type="button" data-toggle="collapse"
+                                                data-target="#collapseZeroA" aria-expanded="true"
+                                                aria-controls="collapseZeroA">
+                                                Certificado
+                                            </button>
+                                        </h2>
+                                    </div>
+
+                                    <div id="collapseZeroA" class="collapse show" aria-labelledby="headingZeroA"
+                                        data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <button class="btn btn-primary btnConfig" type="submit"
+                                                onclick="redirect('Certificate.html')">Generar Certificado </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="ds">
+                                        <h2 class="mb-0">
+                                            <button class="btn" type="button" data-toggle="collapse"
+                                                data-target="#collapseOneA" aria-expanded="true"
+                                                aria-controls="collapseOneA">
+                                                Datos del curso
+                                            </button>
+                                        </h2>
+                                    </div>
+
+                                    <div id="collapseOneA" class="collapse show" aria-labelledby="headingOneA"
+                                        data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <form action="buscar.php" method="get" class="">
+
+                                                <p>este curso inenta enseñar lo basico y necesario para que el alumno
+                                                    logre hacer una ilustracion de maner atractiva</p>
+                                                <br>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header" id="headingTwoA">
+                                        <h2 class="mb-0">
+                                            <button class="btn" type="button" data-toggle="collapse"
+                                                data-target="#collapseTwoA" aria-expanded="false"
+                                                aria-controls="collapseTwoA">
+                                                Maestro
+                                            </button>
+                                        </h2>
+                                    </div>
+                                    <div id="collapseTwoA" class="collapse" aria-labelledby="headingTwoA"
+                                        data-parent="#accordionExample">
+                                        <div class="card-body">
+                                            <div class="row py-3">
+                                                <div class="col">
+                                                    <div class="autor">
+                                                        <div class="row no-gutters">
+                                                            <div class="col-3">
+                                                                <img src="https://pbs.twimg.com/media/EvCIqXeUUAAwwda?format=jpg&name=large"
+                                                                    alt="Avatar">
+                                                            </div>
+                                                            <div class="col-9 text-center m-auto text-wrap">
+                                                                Irack Francisco Alanís Irigoyen
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <footer>
+
+
+
+        </footer>
+    </div>
+</body>
+
+</html>
