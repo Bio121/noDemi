@@ -544,7 +544,7 @@ class cursos {
                       </div><div class="col-md-8"><div class="card-body"><h5 class="card-title">' . $row["nombre"] . '</h5><p class="card-text">'
                 . $row["descripcion"] . '</p><div class="row no-gutters"><div class="col-10">
                       <p class="card-text"><small class="text-muted">Última actualización ' . $row["lastUpdate"] . '</small></p></div>
-                      <div class="col-2"><form action="crearCurso.php" method="post" enctype="multipart/form-data" class="form-inline">
+                      <div class="col-2"><form action="tomarCurso.php" method="post" enctype="multipart/form-data" class="form-inline">
                       <button type="submit" name="existent" value="' . $row["código"] . '" class="btn btn-secondary" >IR</button>
                       </form></div></div></div></div></div></div>';
             }
@@ -553,27 +553,96 @@ class cursos {
         }
     }
 
+    function archivosNivel($nivel) {
+        $conn = new mySQLphpClass();
+        $result = $conn->get_archivos(null, $nivel);
+
+        $cosas = '<ul>';
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $cosas = $cosas . '<li>' . $row['nombre'] . '</li>';
+            }
+        } else {
+            //echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
+        }
+        $cosas = $cosas . '</ul>';
+        return $cosas;
+    }
+    
+    function archivosNivelVer($nivel) {
+        $conn = new mySQLphpClass();
+        $result = $conn->get_archivos(null, $nivel);
+
+        $cosas = '<ul>';
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $cosas = $cosas . '<li><a href = "tomarCurso.php?c='. $row['clave'] .'">' . $row['nombre'] . '<a/></li>';
+            }
+        } else {
+            //echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
+        }
+        $cosas = $cosas . '</ul>';
+        return $cosas;
+    }
+    
+    function getNivelArchivo($archivo) {
+        $conn = new mySQLphpClass();
+        $result = $conn->getNivelArchivo($archivo);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $cosas = $row['nivel'];
+            }
+        } else {
+            //echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
+        }
+        return $cosas;
+    }
+    
+    function archivoAMostrar($archivo) {
+        $conn = new mySQLphpClass();
+        $result = $conn->get_archivos($archivo, null);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                if(!(strncmp("video", $row['tipoDato'], 5))){
+                    echo '  <video class="videoClase" controls>
+                               <source src="'. $row['ruta'] .'" type="'. $row['tipoDato'] .'">
+
+                               Your browser does not support the video tag.
+                           </video>';                   
+                }
+                else{
+                    echo '<button class="btn btn-primary btnConfig upload-result p-3 mb-3"><a href="'. $row['ruta'] .'" download="'. $row['nombre'] .'">Descargar '. $row['nombre'] .'</a></button>';
+                }
+
+            }
+        } else {
+            //echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
+        }
+    }
+
     function nivelesCursos($curso) {
         $conn = new mySQLphpClass();
         $result = $conn->nivelesCursos($curso);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
+                $tairol = str_replace(' ', '', $row["titulo"]);
+
+                $list = $this->archivosNivel($row['nivel_id']);
+
                 echo '<div class="card">
                                 <div class="card-header" id="ds">
                                     <h2 class="mb-0">
-                                        <button class="btn" type="button" data-toggle="collapse" data-target="#collapse'.$row["titulo"].'"
-                                                aria-expanded="false" aria-controls="collapse'.$row["titulo"].'">
-                                            ' . $row["titulo"] . '
+                                        <button class="btn" type="button" data-toggle="collapse" data-target="#collapse' . $tairol . '"
+                                                aria-expanded="false" aria-controls="collapse' . $tairol . '">
+                                            <h5> ' . $row["titulo"] . '</h5>
                                         </button>
                                     </h2>
                                 </div>
 
-                                <div id="collapse'.$row["titulo"].'" class="collapse show" aria-labelledby="heading'.$row["titulo"].'"
+                                <div id="collapse' . $tairol . '" class="collapse" aria-labelledby="heading' . $tairol . '"
                                      data-parent="#accordionExample">
                                     <div class="card-body">
-
-                                        <p>' . $row["Descripcion"] . '</p>
-
+                                        <p>' . $row["Descripcion"] . '</p><h6>Archivos</h6>' . $list . '
                                     </div>
                                 </div>
                             </div>';
@@ -582,6 +651,39 @@ class cursos {
             echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
         }
     }
+
+    function nivelesCursosPaVer($curso) {
+        $conn = new mySQLphpClass();
+        $result = $conn->nivelesCursos($curso);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $tairol = str_replace(' ', '', $row["titulo"]);
+
+                $list = $this->archivosNivelVer($row['nivel_id']);
+
+                echo '<div class="card">
+                                <div class="card-header" id="ds">
+                                    <h2 class="mb-0">
+                                        <button class="btn" type="button" data-toggle="collapse" data-target="#collapse' . $tairol . '"
+                                                aria-expanded="false" aria-controls="collapse' . $tairol . '">
+                                            <h5> ' . $row["titulo"] . '</h5>
+                                        </button>
+                                    </h2>
+                                </div>
+
+                                <div id="collapse' . $tairol . '" class="collapse" aria-labelledby="heading' . $tairol . '"
+                                     data-parent="#accordionExample">
+                                    <div class="card-body">
+                                        <p>' . $row["Descripcion"] . '</p><h6>Archivos</h6>' . $list . '
+                                    </div>
+                                </div>
+                            </div>';
+            }
+        } else {
+            echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
+        }
+    }
+    
     function misAlumnos($usuario) {
         $conn = new mySQLphpClass();
         $result = $conn->misAlumnos($usuario);
@@ -613,6 +715,29 @@ class cursos {
             }
         } else {
             echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
+        }
+    }
+    function getMaestroDelCurso($codigo) {
+        $conn = new mySQLphpClass();
+        $result = $conn->get_MaestroDelCurso($codigo);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+
+                $img_str = base64_encode($row["imagen"]);
+                if (!empty($row["imagen"])) {
+                    $img = "data:image/jpg;base64," . $img_str;
+                }
+                echo '<div class="col-3">
+                        <img src="' . $img . '"
+                            alt="Avatar">
+                        </div>
+                        <div class="col-9 text-center m-auto text-wrap">
+                         ' . $row["usuario"] . '
+                      </div>';
+            }
+        } else {
+            echo '<div class="informacion del maestro no disponible">este curso no cuenta con contenido</div>';
         }
     }
     function misAlumnosCurso($usuario,$curso) {
@@ -1152,9 +1277,9 @@ class comentarios {
         $this->arr = array();
     }
 
-    public function newComment($usuario, $texto, $responde) {
+    public function newComment($usuario, $texto) {
         $conn = new mySQLphpClass();
-        $conn->comentarios(null, $texto, null, $responde, $this->new, $usuario, 'I');
+        $conn->comentarios(null, $texto, null, $usuario, $this->new, 'I');
     }
 
     public function deleteComment($clave) {
@@ -1164,19 +1289,10 @@ class comentarios {
 
     function cargarComentarios() {
         $conn = new mySQLphpClass();
-        $result = $conn->get_misComentarios($this->new, null);
+        $result = $conn->get_misComentarios($this->new);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                if (!isset($row["Responde"])) {
-                    $this->HTMLify($row, false);
-                    $this->addModal($row["Clave"]);
-                }
-                $result2 = $conn->get_misComentarios($this->new, $row["Clave"]);
-                if ($result2->num_rows > 0) {
-                    while ($row2 = $result2->fetch_assoc()) {
-                        $this->HTMLify($row2, true);
-                    }
-                }
+                    $this->HTMLify($row);
             }
         } else {
             echo '<div class="p-5" style="color:#857086;">Se el primero en dejar un comentario.</div>';
@@ -1242,32 +1358,21 @@ class comentarios {
         array_push($this->arr, $str);
     }
 
-    private function HTMLify($row, $respuesta) {
+    private function HTMLify($row) {
         $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
         $responde = "";
         $enRespuesta = "";
-        $replyBTN = '<div class="responder text-right user-select-none" data-toggle="modal" data-target="#modal' . $row["Clave"] . '">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="currentColor" class="bi bi-chat-square-fill" viewBox="0 0 16 16">
-                                    <path d="M2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                                    </svg>
-                                <small>Responder</small>
-                            </div>';
         if (isset($row["Imagen"])) {
             $img = "data:image/jpg;base64," . base64_encode($row["Imagen"]);
-        }
-        if ($respuesta) {
-            $responde = 'style="margin-left: 3rem;"';
-            $enRespuesta = ", En respuesta.";
-            $replyBTN = "";
         }
         echo '<div class="comentario" ' . $responde . '>
                         <div class="comentext mr-2">
                             <div class="comentor">
                                 <img class="comentIMG" src="' . $img . '"/>
-                                <h4 style="display: inline-block; margin-bottom: 30px; margin-right: 1rem;">' . $row["Usuario"] . '</h4>
+                                <h4 style="display: inline-block; margin-bottom: 30px; margin-right: 1rem;">' . $row["usuario"] . '</h4>
                             </div>
-                            ' . $row["Texto"] . '
-                            <small class="text-muted"><br>' . $row["Fecha"] . $enRespuesta . '</small>' . $replyBTN . '
+                            ' . $row["texto"] . '
+                            <small class="text-muted"><br>' . $row["fecha"] . $enRespuesta . '</small> 
                         </div>
                     </div>';
     }

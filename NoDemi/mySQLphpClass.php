@@ -123,11 +123,19 @@ class mySQLphpClass extends configSQLphp {
         $this->byebye();
         return $result;
     }
-
-    function comentarios($clave, $texto, $fecha, $responde, $noticia, $usuario, $seleccion) {
+    
+    function getNivelArchivo($archivo) {
         $this->connect();
-        $sql = "call proc_dml_comentarios( " . $this->varQuery($clave) . ", " . $this->varQuery($texto) . ", " . $this->varQuery($fecha) . ", "
-                . $this->varQuery($responde) . ", " . $this->varQuery($noticia) . ", " . $this->varQuery($usuario) . ", " . $this->varQuery($seleccion) . ");";
+        $sql = "call proc_getNivelArchivo(" . $this->varQuery($archivo) . ");";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        return $result;
+    }
+
+    function comentarios($clave, $texto, $fecha, $noticia, $usuario, $seleccion) {
+        $this->connect();
+        $sql = "call proc_dml_comentario( " . $this->varQuery($clave) . ", " . $this->varQuery($texto) . ", " . $this->varQuery($fecha) . ", " 
+                . $this->varQuery($noticia) . ", " . $this->varQuery($usuario) . ", " . $this->varQuery($seleccion) . ");";
         $this->connectionString->query($sql);
         $this->byebye();
         return 0;
@@ -180,6 +188,14 @@ class mySQLphpClass extends configSQLphp {
         return $result;
     }
 
+    function get_MaestroDelCurso($codigo) {
+        $this->connect();
+        $sql = "call proc_getMaestroDelCurso(" . $this->varQuery($codigo) . ");";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        return $result;
+    }
+    
     function get_noticiasBusqueda($buscar, $inicio, $fin, $cant) {
         $this->connect();
         if ($cant == null) {
@@ -360,10 +376,10 @@ class mySQLphpClass extends configSQLphp {
         return $result;
     }
 
-    function get_misComentarios($noticia, $responde) {
+    function get_misComentarios($noticia) {
         $this->connect();
 
-        $sql = "call proc_Comentarios(" . $this->varQuery($noticia) . ", " . $this->varQuery($responde) . ");";
+        $sql = "call proc_Comentarios(" . $this->varQuery($noticia) . ");";
 
         $result = $this->connectionString->query($sql);
         $this->byebye();
