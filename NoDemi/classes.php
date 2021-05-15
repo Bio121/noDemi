@@ -1360,11 +1360,15 @@ class comentarios {
 
     private function HTMLify($row) {
         $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+
+        $img_str = base64_encode($row["imagen"]);
+        if (!empty($row["imagen"])) {
+            $img = "data:image/jpg;base64," . $img_str;
+        }
+
         $responde = "";
         $enRespuesta = "";
-        if (isset($row["Imagen"])) {
-            $img = "data:image/jpg;base64," . base64_encode($row["Imagen"]);
-        }
+
         echo '<div class="comentario" ' . $responde . '>
                         <div class="comentext mr-2">
                             <div class="comentor">
