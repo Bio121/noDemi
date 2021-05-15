@@ -19,22 +19,6 @@ and open the template in the editor.
         <script src= "js/scripts.js";></script>
         <meta charset="UTF-8">
         <title>Configuración de usuario</title>
-        <style>
-            .unaClase{
-                border: solid 1.5px #666;
-                border-radius: 10px;
-                padding: 1rem;
-                margin-top: 1rem;
-            }
-
-            .textoOculto{
-                position: absolute;
-                top: 0;
-                left: 0;
-                user-select: none;
-                visibility: hidden;
-            }
-        </style>
     </head>
     <body class="sb">
 
@@ -51,6 +35,40 @@ and open the template in the editor.
                 $result = $news->cursos(null, "Nombre de ejemplo", "Breve descripción de su curso", "0.99", null, $_SESSION["usuario"], "0", "Cuéntanos qué incluye tu curso", "I");
                 $row = $result->fetch_assoc();
                 $_SESSION["cursoActual"] = $row["código"];
+            }
+
+            if (isset($_POST['imgUpload'])) {
+
+                $codeVar = $_POST['imgUpload'];
+                $cursoFolder = 'Curso' . $_POST['curso'];
+                $nivelFolder = 'Nivel' . $_POST['nivel'];
+
+                $num_imagenes = count($_FILES['video']['name']);
+                for ($i = 0; $i < $num_imagenes; $i++) {
+                    if (isset($_FILES['video']['name'][$i]) && $_FILES['video']['size'][$i] > 0) {
+
+                        if ($_FILES['video']['size'][$i] > 2048000000) {
+                            $salioMal = '<div class="alert alert-danger my-3" role="alert"> El Archivo es muy grande para ser subido. </div>';
+                        } else {
+
+                            $ruta = 'ARCHIVOS/' . $cursoFolder . '/' . $nivelFolder;
+                            if (!is_dir($ruta)) {
+                                mkdir($ruta, 0777, true);
+                            }
+                            $file_namev = $_FILES['video']['name'][$i];
+                            $file_tmpv = $_FILES['video']['tmp_name'][$i];
+                            $file_type = $_FILES['video']['type'][$i];
+
+                            $rutaFinal = $ruta . '/' . $file_namev;
+
+                            $news->archivos($rutaFinal, $file_type, $file_namev, $_POST['nivel'], null, 'I');
+
+                            move_uploaded_file($file_tmpv, $rutaFinal);
+                        }
+                    }
+                }
+
+                unset($_POST['imgUpload']);
             }
 
             if (array_key_exists('existent', $_POST)) {
@@ -156,12 +174,34 @@ and open the template in the editor.
                     var nombre = $(this).siblings('.nameClass').val();
                     var desc = $(this).siblings('.descClass').val();
                     var codigo = $(this).siblings('.textoOculto').text();
+
                     alteraClase(nombre, desc, codigo);
                 });
 
+
+                $(document).on('change', 'input[type="file"]', function (e) {
+                    $(this).siblings('.subeIMG').attr('disabled', false);
+                });
+
+                $(document).on('click', '.subeIMG', function () {
+                    var nivel = $(this).parents('.unaClase').children('.textoOculto').text();
+
+                    var htmlSTR = '<input type="text" name="curso" value="' + actual + '">';
+                    htmlSTR += '<input type="text" name="nivel" value="' + nivel + '">';
+
+                    $(this).parents('form').append(htmlSTR);
+                });
+
+
                 $('.clasesNuevas').on("click", ".closeClase", function () {
-                    var codigo = $(this).parents('.unaClase').children('.textoOculto').text();
+                    var codigo = $(this).parents('.unaClase > .textoOculto').text();
                     $('#claseBorrar').text(codigo);
+                });
+
+                $('.clasesNuevas').on("click", ".delFile", function () {
+                    var codigo = $(this).siblings('.textoOculto').text();
+                    var nivel = $(this).parents('.unaClase').children('.textoOculto').text();
+                    quitaArchivo(codigo, nivel);
                 });
 
                 $('.catContEx').on("click", ".catQuitar", function () {
@@ -193,7 +233,6 @@ and open the template in the editor.
                         data: dataToSend,
                         dataType: "json",
                         success: function (data) {
-                            //debugger;
                             data.forEach(element => {
                                 ponerClase(element.codigo, element.titulo, element.desc, element.calificacion);
                             });
@@ -250,7 +289,7 @@ and open the template in the editor.
                         }
                     });
                 }
-                
+
                 function quitaClase(codigo) {
                     var dataToSend = {
                         action: "quitaClases",
@@ -287,15 +326,141 @@ and open the template in the editor.
                     htmlSTR += '<button type="button" class="close closeClase" data-toggle="modal" data-target="#seguroModal"><span aria-hidden="true">&times;</span></button>';
                     htmlSTR += '<label for="nameClass' + classCounter + '"></label></div>';
                     htmlSTR += '<input type="text" class="form-control campoConfig nameClass" id="' + classCounter + '" name="name" placeholder="" value="' + titulo + '">';
-                    htmlSTR += '<label for="contraConfig">Contenido</label><br><input type="file" name="video' + classCounter + '"><br><br>';
+                    htmlSTR += '<label for="contraConfig">Contenido</label><br>';
+                    htmlSTR += '<form action="crearCurso.php" method="post" enctype="multipart/form-data">'
+                    htmlSTR += '<input class="mr-3 mb-3" type="file" name="video[]" multiple>';
+                    htmlSTR += '<button class="btn btn-primary subeIMG" type="Submit" name="imgUpload" value="' + codigo + '" disabled>Subir Archivos</button></form>'
+                    htmlSTR += '<div class="filesCont sb" id="files' + codigo + '"></div>';
                     htmlSTR += '<label for="desc' + classCounter + '">Descripción</label><br>';
                     htmlSTR += '<textarea class="descClass" id="desc' + classCounter + '" name="desc' + classCounter + '" rows="4" cols="77" style="box-sizing:border-box">' + desc + '</textarea><br>';
-                    htmlSTR += '<button class="btn btn-primary btnConfig modifyBTN" type="Submit" name="changes" value="changes">Modificar</button></div>';
+                    htmlSTR += '<button class="btn btn-primary btnConfig modifyBTN" type="Submit" name="changes" value="changes">Actualizar Datos de la clase</button></div>';
 
                     $('.clasesNuevas').append(htmlSTR);
 
+                    traerArchivos(codigo);
+
                 }
-            });
+
+                function traerArchivos(nActual) {
+                    var dataToSend = {
+                        action: "getArchivos",
+                        nivelActual: nActual
+                    };
+                    debugger;
+                    $.ajax({
+                        url: "clasesCurso.php",
+                        async: true,
+                        type: "POST",
+                        data: dataToSend,
+                        dataType: "json",
+                        success: function (data) {
+                            debugger;
+                            data.forEach(element => {
+                                ponerArchivo(element.ruta, element.tipoDato, element.nombre, element.clave, element.nivel, nActual);
+                            });
+                        },
+                        error: function (x, y, z) {
+                            alert("Error del WebService: " + x + y + z);
+                        }
+                    });
+                }
+
+                function quitaArchivo(codigo, nActual) {
+                    var dataToSend = {
+                        action: "quitaArchivo",
+                        nivelActual: nActual,
+                        codigo: codigo
+                    };
+                    debugger;
+                    $.ajax({
+                        url: "clasesCurso.php",
+                        async: true,
+                        type: "POST",
+                        data: dataToSend,
+                        dataType: "json",
+                        success: function (data) {
+                            data.forEach(element => {
+                                //ponerClase(element.codigo, element.titulo, element.desc, element.calificacion);
+                            });
+                            $('#files' + nActual).empty();
+                            traerArchivos(nActual);
+                        },
+                        error: function (x, y, z) {
+                            alert("Error del WebService: " + x + y + z);
+                        }
+                    });
+                }
+
+                function ponerArchivo(ruta, tipoDato, nombre, clave, nivel, id) {
+
+                    debugger;
+                    var url;
+
+                    if (tipoDato.indexOf('image') == 0) {
+                        url = ruta;
+                    } else {
+                        url = 'img/files/' + imashIcon(tipoDato);
+                    }
+
+                    var redir = "redirect('" + ruta + "')";
+
+                    var htmlSTR = '<div class="fileItem">';
+                    htmlSTR += '<div class="textoOculto">' + clave + '</div>';
+                    htmlSTR += '<div class="delFile">';
+                    htmlSTR += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">';
+                    htmlSTR += '<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>';
+                    htmlSTR += '<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>';
+                    htmlSTR += '</svg></div>';
+                    htmlSTR += '<div class="fileIcon" style="background: url(' + url + ') no-repeat center center; background-size: 80% auto;" onclick = "' + redir + '"></div>';
+                    htmlSTR += '<p class="fileName">' + nombre + '</p></div>';
+
+
+                    $('#files' + id).append(htmlSTR);
+
+                }
+
+                function imashIcon(tipoDato) {
+                    var result;
+
+                    switch (tipoDato) {
+                        case 'video/mp4':
+                        case 'video/mkv':
+                        case 'video/mov':
+                        case 'video/avi':
+                        case 'video/wmv':
+                        case 'video/webm':
+                            result = 'movie-videos.png';
+                            break;
+                        case 'audio/wav':
+                        case 'audio/aiff':
+                        case 'audio/mpeg':
+                        case 'audio/aac':
+                        case 'audio/ogg':
+                        case 'audio/wma':
+                        case 'audio/flac':
+                        case 'audio/alac':
+                            result = 'analyze-sound-wave.png';
+                            break;
+                        case 'pdf':
+                            result = 'pdf-files.png';
+                            break;
+                        case 'rar':
+                            result = 'rar-file.png';
+                            break;
+                        case 'txt':
+                            result = 'txt-file.png';
+                            break;
+                        case 'zip':
+                            result = 'zip-file.png';
+                            break;
+                        default:
+                            result = 'unknown-file.png';
+                    }
+
+                    return result;
+                }
+            }
+            );
 
         </script>
 
@@ -307,6 +472,11 @@ and open the template in the editor.
 
                     <div class="row">
                         <div>
+                            <?php
+                            if (isset($salioMal)) {
+                                echo $salioMal;
+                            }
+                            ?>
                             <h3>Categorías del curso</h3>
 
                             <form action="crearCurso.php" method="post" enctype='multipart/form-data'>

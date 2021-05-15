@@ -54,7 +54,7 @@ session_start();
 
                 <div class="row">
                     <div class="col">
-                        <div class="list-group list-group-horizontal " id="list-tab" role="tablist">
+                        <div class="list-group list-group-horizontal" id="list-tab" role="tablist" style="cursor: default;">
                             <a class="list-group-item list-group-item-action active text-center" id="list-home-list"
                                data-toggle="list" href="#list-home" role="tab" aria-controls="home">Alumnos</a>
                         </div>

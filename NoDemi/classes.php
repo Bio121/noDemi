@@ -678,10 +678,10 @@ class cursos {
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo '<p> Alumnos Totales: '. $row["alumnosTotal"] .' </p>';
-                echo '<p> Ganancia Totales: '. $row["ganancia"] .' $ </p>';
+                echo '<p> Ganancia Totales: $ '. $row["ganancia"] .'</p>';
             }
         } else {
-            echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
+            echo '<div class="emptyMessage text-muted">Este curso no cuenta con contenido</div>';
         }
     }
     

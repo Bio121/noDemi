@@ -101,7 +101,7 @@ class mySQLphpClass extends configSQLphp {
     
     function cursoXusuario($clave, $usuario, $curso, $calificacion, $seleccion) {
         $this->connect();
-        $sql = "call proc_dml_cursoXusuario(" . $clave . ", '" . $usuario . "'," . $curso . "," . $calificacion . ", '". $seleccion ."');";
+        $sql = "call proc_dml_cursoXusuario(" . $this->varQuery($clave) . ", " . $this->varQuery($usuario) . ", " . $this->varQuery($curso ). ", " . $this->varQuery($calificacion) . ", ". $this->varQuery($seleccion) .");";
         $this->connectionString->query($sql);
         $this->byebye();
         return $sql;
@@ -334,10 +334,18 @@ class mySQLphpClass extends configSQLphp {
         return $result;
     }
 
-    function get_lasNoticias($orden, $estado, $codigo) {
+    function archivos($ruta, $tipoDato, $nombre, $nivel, $clave, $seleccion) {
+        $this->connect();
+        $sql = "call proc_dml_archivo({$this->varQuery($ruta)}, {$this->varQuery($tipoDato)}, {$this->varQuery($nombre)}, {$this->varQuery($nivel)}, {$this->varQuery($clave)}, {$this->varQuery($seleccion)});";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        return $result;
+    }
+    
+     function get_archivos($clave, $nivel) {
         $this->connect();
 
-        $sql = "call proc_lasNoticias(" . $this->varQuery($orden) . ", " . $this->varQuery($estado) . ", " . $this->varQuery($codigo) . ");";
+        $sql = "call proc_getArchivos(" . $this->varQuery($clave) . ", " . $this->varQuery($nivel) . ");";
 
         $result = $this->connectionString->query($sql);
         $this->byebye();

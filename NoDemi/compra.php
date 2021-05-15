@@ -40,7 +40,7 @@ and open the template in the editor.
 
             if (isset($_POST["pagar"])) {
                 $codigo = $_POST["pagar"];
-                $compra = $compra->cursoXusuario("NULL", $_SESSION["usuario"], $codigo, "null", "i");
+                $compra = $compra->cursoXusuario(null, $_SESSION["usuario"], $codigo, null, "i");
                 echo '<script type="text/javascript">
                      alert("Compra exitosa");
                      </script>';

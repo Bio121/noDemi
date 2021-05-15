@@ -254,7 +254,6 @@ session_start();
                 $(this).prev().addClass('prev');
                 $(this).next().addClass('next');
             });
-            ht
 
 
             // Keyboard nav
