@@ -24,6 +24,11 @@ and open the template in the editor.
                 integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
         <script src="js/scripts.js" ;></script>
+        <style>
+            .voto{
+                color: #ed1111;
+            }
+        </style>
         <meta charset="UTF-8">
         <title>Novedades del Bot</title>
     </head>
@@ -61,6 +66,13 @@ and open the template in the editor.
             $contenido = $_GET["c"];
             $nivel = $curso->getNivelArchivo($_GET["c"]);
         }
+        
+        
+        if(isset($_GET["like"])&& isset($_SESSION["usuario"])){
+          $con = new mySQLphpClass();
+          $con->newsInteractions($nivel, $_SESSION["usuario"], $_GET["like"]);
+          header('Location: tomarCurso.php?c=' . $_GET["c"]);
+         }
 
 
         $news = new mySQLphpClass();
@@ -134,12 +146,13 @@ and open the template in the editor.
                                                 </button>
                                             </h2>
                                         </div>
+                                        <?php $termino = $curso->Progreso($_SESSION["cursoActual"], $_SESSION["usuario"]) ?>
 
                                         <div id="collapseZeroA" class="collapse" aria-labelledby="headingZeroA"
                                              data-parent="#accordionExample">
                                             <div class="card-body">
                                                 <button class="btn btn-primary btnConfig" type="submit"
-                                                        onclick="redirect('Certificate.html')">Generar Certificado </button>
+                                                        onclick="redirect('Certificate.php?user=<?php echo $_SESSION["usuario"] ?>&cur=<?php echo $_SESSION["cursoActual"] ?>')" <?php if($termino != 100) echo "disabled" ?>>Generar Certificado </button>
                                             </div>
                                         </div>
 
@@ -192,6 +205,45 @@ and open the template in the editor.
 
                             <?php
                             if ($contenido > 0) {
+                                
+                                $redir = "redirect('tomarCurso.php?c=". $contenido ."&user=&like=1')";
+                                $redir2 = "redirect('tomarCurso.php?c=". $contenido ."&user=&like=0')";
+                                echo ' <h5 style >Una vez termines el nivel comparte con nosotros que te parecio el nivel </h5>
+                                    <p>es necesario calificar el nivel para darlo por terminado</p>
+                                    <div class="row">
+                    <div class="col-3 my-5" id="likeCounter" style="font-size: 25px">';
+                                
+                                $votastePor= $curso->votasteONo($nivel,$_SESSION["usuario"]);
+                                if (!isset($votastePor)){
+                                    $votastePor=3;
+                                };
+                       //cho $likes; 
+                                
+                    echo '</div>
+                        
+                       
+                       
+                    <div class="';
+                    if($votastePor == 1){
+                    echo ' voto ';}
+                    echo 'col-2 my-5 meGusta user-select-none text-center" onclick="'. $redir .'">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-suit-heart" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 0l1.669.864 1.858.282.842 1.68 1.337 1.32L13.4 6l.306 1.854-1.337 1.32-.842 1.68-1.858.282L8 12l-1.669-.864-1.858-.282-.842-1.68-1.337-1.32L2.6 6l-.306-1.854 1.337-1.32.842-1.68L6.331.864 8 0z"/>
+                        <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/>
+                        </svg>
+                        Premiar
+                    </div>
+                    <div class="';
+                    if($votastePor == 0){
+                    echo ' voto ';}
+                    echo 'col-2 my-5 meGusta user-select-none text-center" onclick="'. $redir2 .'">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-suit-heart" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M9.669.864L8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193l-1.51-.229L8 1.126l-1.355.702-1.51.229-.684 1.365-1.086 1.072L3.614 6l-.25 1.506 1.087 1.072.684 1.365 1.51.229L8 10.874l1.356-.702 1.509-.229.684-1.365 1.086-1.072L12.387 6l.248-1.506-1.086-1.072-.684-1.365z"/>
+                        <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/>
+                        </svg>
+                        No Premiar
+                    </div>
+                </div>';
 
                                 echo "<div class='row mt-3'>
                     <h3 class='mx-auto'>COMENTARIOS</h3> 

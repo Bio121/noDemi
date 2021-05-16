@@ -163,9 +163,7 @@ and open the template in the editor.
 
                         </div>
                         <div class="calificacionC">
-                            <h2 class="child">calificacion: 5.0</h2>
-                            <input id="radio10" class="child" type="radio" name="estrellas" value="50">
-                            <label id="estrella" for="radio1">★</label>
+                            <h2 class="child">calificacion del curso: <?php $curso->calificacionCurso($_GET["cur"]) ?></h2>
                         </div>
                     </div>
                 </div>
@@ -189,65 +187,24 @@ and open the template in the editor.
 
                 <div class="separador"></div>
                 <!--SECCIÓN DE COMENTARIOS-->
-                <div class="col">
-                    Calificación del curso.
+
+                <?php
+                            if ($_GET["cur"] > 0) {
+
+                                echo "<div class='row mt-3'>
+                    <h3 class='mx-auto'>COMENTARIOS</h3> 
                 </div>
-                <form>
 
-                    <div class="calificacionC">
-                        <h1 class="child">5.0</h1>
-                        <p class="clasificacion ">
-                            <input id="radio1" type="radio" name="estrellas" value="5">
-                            <label id="estrella" for="radio1">★</label>
-                            <input id="radio2" type="radio" name="estrellas" value="4">
-                            <label id="estrella" for="radio2">★</label>
-                            <input id="radio3" type="radio" name="estrellas" value="3">
-                            <label id="estrella" for="radio3">★</label>
-                            <input id="radio4" type="radio" name="estrellas" value="2">
-                            <label id="estrella" for="radio4">★</label>
-                            <input id="radio5" type="radio" name="estrellas" value="1">
-                            <label id="estrella" for="radio5">★</label>
-                        </p>
-                    </div>
 
-                </form>
-                <div class="row mt-3">
-                    <div class="col">
-                        Hey, déjanos un comentario.
-                    </div>
-                </div>
-                <div class="row mt-2">
+                <div class='listaNotas overflow-auto my-2'>
 
-                    <div class="col-lg-10 m-auto">
-                        <textarea style="width:100%"></textarea>
-                    </div>
-                    <div class="col-lg-2 p-0 p-sm-2 p-lg-0">
-                        <button type="button" class="btn btn-primary btn-lg btn-block">Enviar</button>
-                    </div>
-                </div>
-                <div class="listaNotas overflow-auto my-2">
+                    ";
+                                $comentarios = new comentarios($_GET["cur"]);
+                                $comentarios->cargarTodosComentarios();
+                                echo "
 
-                    <div class="comentario">
-                        <img src="https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240" />
-                        <div class="comentext">
-                            <h4>Pollito</h4>
-                            No pues la verdad pobre de ese sujeto, quién sabe qué habría sido si hubiera ganado.
-                            <small class="text-muted"><br>Hace 5 minutos</small>
-                        </div>
-                    </div>
+                </div>";}?> 
 
-                    <div class="comentario">
-                        <img src="https://pbs.twimg.com/media/EiNYONQXkAEvm5d?format=png&name=360x360" />
-                        <div class="comentext">
-                            <h4>Vela en Cubo</h4>
-                            Sinceramente no entiendo a quién le puede interesar una noticia como esta. Ese juegot tiene como
-                            un siglo y la verdad nadie lo sabe jugar. Ojalá que el perdedor del que hablan en la noticia se
-                            encuentre un juego de verdad en lugar de seguir con esa porquería que nadie quiere.
-                            <small class="text-muted"><br>Hace 8 minutos</small>
-                        </div>
-                    </div>
-
-                </div>
 
 
             </div>

@@ -381,17 +381,51 @@ class mySQLphpClass extends configSQLphp {
         $this->byebye();
         return $result;
     }
-
-    function newsInteractions($seleccion, $noticia, $usuario) {
+    
+    function get_todosLosComentarios($noticia) {
         $this->connect();
 
-        $sql = "call proc_NewsInteractions(" . $this->varQuery($seleccion) . ", " . $this->varQuery($noticia) . ", " . $this->varQuery($usuario) . ");";
+        $sql = "call proc_todosLosComentarios(" . $this->varQuery($noticia) . ");";
 
         $result = $this->connectionString->query($sql);
         $this->byebye();
         return $result;
     }
 
+
+    function newsInteractions($nivel, $usuario, $calificacion) {
+        $this->connect();
+
+        $sql = "call proc_NewsInteractions(" . $nivel . ", " . $this->varQuery($usuario) . ", " . $this->varQuery($calificacion) . ");";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        return $result;
+    }
+    
+    function votasONo($nivel, $usuario) {
+        $this->connect();
+        $sql = "call proc_votasteONo(" . $nivel . ", " . $this->varQuery($usuario) . ");";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        return $result;
+    }
+
+    function calificacionCurso($curso) {
+        $this->connect();
+        $sql = "call proc_calificacionCurso(" . $curso . ");";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        return $result;
+    }
+    
+    function progreso($curso, $usuario) {
+        $this->connect();
+        $sql = "call proc_Prpogreso(" . $curso . ", " . $this->varQuery($usuario) . ");";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        return $result;
+    }
+    
     function get_Reporteros() {
         $this->connect();
         $sql = "call proc_Reporteros();";

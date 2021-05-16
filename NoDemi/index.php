@@ -97,33 +97,8 @@ session_start();
                 </div>
 
                 <!-- CARRUSEL -->
-                <div style="padding-bottom: 10rem; padding-top: 5rem">
-                    <div class="card-carousel">
-
-                        <div class="my-card">
-                            <div class="card" style="width: 18rem;">
-                                <img src="img/card.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Programar absolutamente todo lo que tú quieras en menos de un día
-                                    </h5>
-                                    <small class="text-muted">irack alanís</small><br>
-                                    <strong>413.00MXN</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="my-card">
-                            <div class="card" style="width: 18rem;">
-                                <img src="img/card.png" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h5 class="card-title">Aprende a dibujar en 3D, desde cero, sin conocimiento previo.
-                                    </h5>
-                                    <small class="text-muted">El Maestro Shaolín</small><br>
-                                    <strong>3,141.59MXN</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row text-center">
+                    <?php $cur->cursosVNC(3, "C"); ?>
                 </div>
                 <!-- FIN CARRUSEL -->
                 

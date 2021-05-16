@@ -413,7 +413,37 @@ class cursos {
             }
         }
     }
-
+    
+    function votasteONo($nivel, $usuario) {
+        $conn = new mySQLphpClass();
+        $vot = null;
+        $result = $conn->votasONo($nivel, $usuario);
+        if ($result) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                $vot = $row["calificacion"];
+                }
+            } else {
+                echo '<p>aun no calificas el nivel</p>';
+            }
+        }
+        return $vot;
+    }
+    
+    function calificacionCurso($curso) {
+        $conn = new mySQLphpClass();
+        $result = $conn->calificacionCurso($curso);
+        if ($result) {
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo $row["calificacion"];
+                }
+            } else {
+                echo '0.0';
+            }
+        }
+    }
+    
     function Vistas($cant) {
         $conn = new mySQLphpClass();
         $ind = 0;
@@ -683,17 +713,31 @@ class cursos {
         }
     }
     
+    function Progreso($curso, $usuario) {
+        $conn = new mySQLphpClass();
+        $result = $conn->progreso($curso, $usuario);
+        $progresion = 0;
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+            $progresion =  $row["progreso"];
+            }
+        }
+        return $progresion;
+    }
+    
     function misAlumnos($usuario) {
         $conn = new mySQLphpClass();
         $result = $conn->misAlumnos($usuario);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
-
                 $img_str = base64_encode($row["imagen"]);
                 if (!empty($row["imagen"])) {
                     $img = "data:image/jpg;base64," . $img_str;
                 }
+                
+                $progreso = $this->Progreso($row['curso_id'], $usuario);
+                
                 $redir = "redirect('chat.php?cur=" . $row['curso_id'] . "&user=" . $row['usuario'] . "')";
                 echo '<div class="card listaCard" onclick="' . $redir . '">
                                 <div class="row no-gutters">
@@ -707,7 +751,9 @@ class cursos {
                                             <p class="card-text">
                                                 estudiando el curso ' . $row["nombre"] . '.
                                             </p>
-                                            <p> ' . $row["curso_id"] . '</p>
+                                            <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: '. $progreso .'%;" aria-valuenow="'. $progreso .'" aria-valuemin="0" aria-valuemax="100">'. $progreso .'%</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1292,6 +1338,18 @@ class comentarios {
     function cargarComentarios() {
         $conn = new mySQLphpClass();
         $result = $conn->get_misComentarios($this->new);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                    $this->HTMLify($row);
+            }
+        } else {
+            echo '<div class="p-5" style="color:#857086;">Se el primero en dejar un comentario.</div>';
+        }
+    }
+    
+    function cargarTodosComentarios() {
+        $conn = new mySQLphpClass();
+        $result = $conn->get_todosLosComentarios($this->new);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                     $this->HTMLify($row);
