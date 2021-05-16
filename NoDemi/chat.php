@@ -33,8 +33,8 @@ session_start();
         $compra = new mySQLphpClass();
         $nav = new navbar();
         $nav->simple();
-        
-        if(!isset($_SESSION['usuario'])){
+
+        if (!isset($_SESSION['usuario'])) {
             header('Location: index.php');
         }
 
@@ -81,6 +81,16 @@ session_start();
 
 
             $(document).ready(function () {
+
+                $(document).keypress(function (e) {
+                    var key = e.which;
+                    if (key == 13) // the enter key code
+                    {
+                        $('#send').click();
+                        return false;
+                    }
+                });
+
                 var yo = $('#yo').text();
                 var nos = $('#nos').text();
 
@@ -89,10 +99,11 @@ session_start();
 
                 chatsHere.on("child_added", (snap) => {
                     var mensaje = snap.val();
-
                     var texto = mensaje.texto;
                     var user = mensaje.yo;
                     var time = mensaje.time;
+                    var read = mensaje.read;
+                    var dir = snap.key
 
                     var clase;
                     if (user == yo) {
@@ -107,8 +118,8 @@ session_start();
                     $('.chatCont').append(htmlSTR);
 
                     /*$(".chatCont").animate({
-                        scrollTop: $(".message:last-child").position().top
-                    }, 1000);*/
+                     scrollTop: $(".message:last-child").position().top
+                     }, 1000);*/
 
                 });
 

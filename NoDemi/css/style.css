@@ -571,6 +571,8 @@ body {
 
 .certificado{
     position: absolute;
+    top: 0;
+    left: 0;
     height: 210mm;
     width: 297mm;
     background-color: #dcc2f5;
