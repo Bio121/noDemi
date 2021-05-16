@@ -146,6 +146,21 @@ class category {
         $conn = null;
         return $arr;
     }
+    
+        function randClass($cant, $activo) {
+        $conn = new mySQLphpClass();
+        $result = $conn->get_cursoRand($cant, $activo);
+        $arr = Array();
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                array_push($arr, $row);
+            }
+        } else {
+            $arr = null;
+        }
+        $conn = null;
+        return $arr;
+    }
 
 }
 

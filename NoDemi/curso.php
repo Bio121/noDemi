@@ -68,7 +68,7 @@ and open the template in the editor.
                     $lastUpdate = $row["lastUpdate"];
                     $tName = $row["nombreUser"] . ' ' . $row["apellidoUser"];
                     $userIMG = $row["userIMG"];
-                    $img_str2 = 'https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240';
+                    $img_str2 = 'img/default.png';
                     if(!empty($userIMG)){
                         $img_str2 = 'data:image/jpg;base64,' . base64_encode($userIMG);
                     }

@@ -179,6 +179,14 @@ class mySQLphpClass extends configSQLphp {
         $this->byebye();
         return $result;
     }
+    
+    function get_cursoRand($cant, $activo) {
+        $this->connect();
+        $sql = "call proc_randCurso(" . $this->varQuery($cant) . ", " . $this->varQuery($activo) . ");";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        return $result;
+    }
 
     function get_curso_unique($codigo) {
         $this->connect();

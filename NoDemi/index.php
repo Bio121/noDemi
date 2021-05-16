@@ -37,6 +37,12 @@ session_start();
         $cur = new cursos();
 
         $catArr = $barra->randCategory('3', '1');
+        
+        $randCur = $barra->randClass(null, null);
+        
+        $redirect = 'curso.php?cur='.$randCur[0]['código'];
+        
+        
 
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -136,7 +142,7 @@ session_start();
                         nuestra función de "Curso Aleatorio" que te sugerirá uno de nuestros cursos para que puedaas
                         comenzar justo ahora. Quién sabe, tal vez descubras extraordinarias habilidades que aguardaban a ser
                         despertadas.</p>
-                    <a class="btn btn-primary btn-lg" href="curso.html" role="button" id="redirectRegistro">Mi suerte será...</a>
+                    <a class="btn btn-primary btn-lg" href="<?php echo $redirect; ?>" role="button" id="redirectRegistro">Mi suerte será...</a>
                 </div>
 
 

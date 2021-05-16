@@ -67,7 +67,7 @@ and open the template in the editor.
                     $lastUpdate = $row["lastUpdate"];
                     $tName = $row["nombreUser"] . ' ' . $row["apellidoUser"];
                     $userIMG = $row["userIMG"];
-                    $img_str2 = 'https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240';
+                    $img_str2 = 'img/default.png';
                     if(!empty($userIMG)){
                         $img_str2 = 'data:image/jpg;base64,' . base64_encode($userIMG);
                     }
@@ -106,7 +106,7 @@ and open the template in the editor.
                     $lastUpdate = $row["lastUpdate"];
                     $tName = $row["nombreUser"] . ' ' . $row["apellidoUser"];
                     $userIMG = $row["userIMG"];
-                    $img_str2 = 'https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240';
+                    $img_str2 = 'img/default.png';
                     if(!empty($userIMG)){
                         $img_str2 = 'data:image/jpg;base64,' . base64_encode($userIMG);
                     }
@@ -152,7 +152,7 @@ and open the template in the editor.
                            <?php 
                            if($compraBoto == 0){echo'El curso: '; echo $nombre;}
                            else{
-                               echo'<p>compartelo con tus amigos</p>';
+                               echo'<p>Compártelo con tus amigos</p>';
                            } 
                            ?>
                         </div>
