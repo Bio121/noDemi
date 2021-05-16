@@ -128,12 +128,6 @@ and open the template in the editor.
                         </div>
                     </div>
                     <div>
-                        <h4>Requisitos</h4>
-                        <ul>
-                            <li>pintura de aceite</li>
-                        </ul>
-                    </div>
-                    <div>
                         <h1>Descripción</h1>
                         <p><?php echo $desc; ?></p>
                     </div>

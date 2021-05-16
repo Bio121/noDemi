@@ -23,28 +23,68 @@ and open the template in the editor.
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
                 integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
         crossorigin="anonymous"></script>
+        <script type="text/javascript" src="js/mifacebook.js"></script>
         <script src="js/scripts.js" ;></script>
         <meta charset="UTF-8">
         <title>NoDemi</title>
+        <script type="text/javascript">
+	function shareFB() {
+		var nombreCurs = $("#cursoNombre").val();
+		shareScore(nombreCurs);
+		
+	}
+	</script>
     </head>
 
     <body class="sb">
 
         <?php
         include "classes.php";
+        $curso = new cursos();
         $compra = new mySQLphpClass();
         $nav = new navbar();
         $nav->simple();
+        $compraBoto = 0;
         
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if (isset($_POST["pagar"])) {
                 $codigo = $_POST["pagar"];
+                                $cur = new mySQLphpClass();
+                $result = $cur->get_curso_unique($codigo);
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $codigo = $row["código"];
+                    $nombre = $row["nombre"];
+                    $desc = $row["descripcion"];
+                    $precio = $row["precio"];
+                    $imagen = $row["imagen"];
+                    $img_str = 'img/banner.jpg';
+                    if(!empty($imagen)){
+                        $img_str = 'data:image/jpg;base64,' . base64_encode($imagen);
+                    }
+                    $incluye = $row["incluye"];
+                    $lastUpdate = $row["lastUpdate"];
+                    $tName = $row["nombreUser"] . ' ' . $row["apellidoUser"];
+                    $userIMG = $row["userIMG"];
+                    $img_str2 = 'https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240';
+                    if(!empty($userIMG)){
+                        $img_str2 = 'data:image/jpg;base64,' . base64_encode($userIMG);
+                    }
+                    $publicado = $row["publicado"];
+                    if ($publicado != 1) {
+                        $byebye = true;
+                    }
+                } else {
+                    $byebye = true;
+                }
                 $compra = $compra->cursoXusuario(null, $_SESSION["usuario"], $codigo, null, "i");
                 echo '<script type="text/javascript">
                      alert("Compra exitosa");
                      </script>';
-                header('Location: index.php');
+                $compraBoto = $curso->compradoBoto($_SESSION["usuario"], $codigo);
+                
+                //header('Location: index.php');
             }
             
             if (isset($_POST["buy"])) {
@@ -98,20 +138,38 @@ and open the template in the editor.
                     <div class="col mt-5">
                         
                         <div class="row">
-                            <h2>Resumen de la compra</h2>
+                            <?php
+                            if($compraBoto == 0){
+                                echo '<h2>Resumen de la compra</h2>';
+                            }
+                            else{
+                                 echo '<h2>Gracias por comprar con nosotros</h2>';
+                            };
+                            ?>
+                            
                         </div>
                         <div class="row">
-                            El curso: <?php echo $nombre; ?>
+                           <?php 
+                           if($compraBoto == 0){echo'El curso: '; echo $nombre;}
+                           else{
+                               echo'<p>compartelo con tus amigos</p>';
+                           } 
+                           ?>
                         </div>
                         <div class="row">
                             
                         </div>
-                        <div class="row">
-                            <form action="compra.php" method="POST" enctype="multipart/form-data">
-                                <button class="btn btn-primary btnConfig" type="submit" name="pagar" value="<?php echo $codigo; ?>" >Pagar</button>
-                            </form>
-                        </div>
-                        
+                        <?php if($compraBoto == 0){
+                            echo'<div class="row">
+                                <form action="compra.php" method="POST" enctype="multipart/form-data">
+                                    <button class="btn btn-primary btnConfig" type="submit" name="pagar" value="'. $codigo.'" >Pagar</button>
+                                </form>
+                            </div>';
+                        }
+                        else{
+                            
+                            echo '<input id="cursoNombre" type="hidden" name="cursoNombre" value="'. $nombre .'"><button class="btn btn-primary btnConfig" onclick="shareFB();">Compartir en Facebook</button>';
+                        }?>
                     </div>
 
                     <div class="col-4 pb-5" style="background-color: #e9e9e9">

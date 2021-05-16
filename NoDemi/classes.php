@@ -414,6 +414,18 @@ class cursos {
         }
     }
     
+    function compradoBoto($usuario, $curso) {
+        $conn = new mySQLphpClass();
+        $result = $conn->compradoONo($usuario, $curso);
+        $compra=0;
+        if ($result) {
+            if ($result->num_rows > 0) {
+                $compra = 1;
+            } 
+        }
+        return $compra;
+    }
+    
     function votasteONo($nivel, $usuario) {
         $conn = new mySQLphpClass();
         $vot = null;
@@ -549,10 +561,11 @@ class cursos {
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
                 echo '<p> Alumnos del curso: ' . $row["alumnosTotal"] . ' </p>';
-                echo '<p> Ganancia del curso: ' . $row["ganancia"] . ' $ </p>';
+                echo '<p> Ganancia del curso: $ ' . $row["ganancia"] . ' </p>';
             }
         } else {
-            echo '<div class="emptyMessage text-muted">Parece que no has creado ningún curso</div>';
+            echo '<p> Alumnos del curso: 0 </p>';
+                echo '<p> Ganancia del curso:$ 0 </p>';
         }
     }
 
@@ -568,17 +581,53 @@ class cursos {
                     $img = "data:image/jpg;base64," . $img_str;
                 }
 
+                $progreso = $this->Progreso($row['código'], $usuario);
                 echo '<div class="card listaCard"><div class="row no-gutters"><div class="col-md-4">
                       <img src="' . $img . '" class="card-img" alt="...">
                       </div><div class="col-md-8"><div class="card-body"><h5 class="card-title">' . $row["nombre"] . '</h5><p class="card-text">'
-                . $row["descripcion"] . '</p><div class="row no-gutters"><div class="col-10">
+                . $row["descripcion"] . '</p>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: '. $progreso .'%;" aria-valuenow="'. $progreso .'" aria-valuemin="0" aria-valuemax="100">'. $progreso .'%</div>
+                        </div>
+                       <div class="row no-gutters"><div class="col-10">
                       <p class="card-text"><small class="text-muted">Última actualización ' . $row["lastUpdate"] . '</small></p></div>
                       <div class="col-2"><form action="tomarCurso.php" method="post" enctype="multipart/form-data" class="form-inline">
-                      <button type="submit" name="existent" value="' . $row["código"] . '" class="btn btn-secondary" >IR</button>
+                      <button type="submit" name="existent" value="' . $row["código"] . '" class="btn btn-secondary by-3" >IR</button>
                       </form></div></div></div></div></div></div>';
             }
         } else {
             echo '<div class="emptyMessage text-muted">Parece que no has comprado ningún curso</div>';
+        }
+    }
+
+    function misCursosCompradosCompletos($usuario) {
+        $conn = new mySQLphpClass();
+        $result = $conn->get_misCursosComprados($usuario);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $progreso = $this->Progreso($row['código'], $usuario);
+                if($progreso == 100){
+                    $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                    $img_str = base64_encode($row["imagen"]);
+                    if (!empty($row["imagen"])) {
+                        $img = "data:image/jpg;base64," . $img_str;
+                    }
+                    echo '<div class="card listaCard"><div class="row no-gutters"><div class="col-md-4">
+                          <img src="' . $img . '" class="card-img" alt="...">
+                          </div><div class="col-md-8"><div class="card-body"><h5 class="card-title">' . $row["nombre"] . '</h5><p class="card-text">'
+                    . $row["descripcion"] . '</p>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: '. $progreso .'%;" aria-valuenow="'. $progreso .'" aria-valuemin="0" aria-valuemax="100">'. $progreso .'%</div>
+                            </div>
+                           <div class="row no-gutters"><div class="col-10">
+                          <p class="card-text"><small class="text-muted">Última actualización ' . $row["lastUpdate"] . '</small></p></div>
+                          <div class="col-2"><form action="tomarCurso.php" method="post" enctype="multipart/form-data" class="form-inline">
+                          <button type="submit" name="existent" value="' . $row["código"] . '" class="btn btn-secondary by-3" >IR</button>
+                          </form></div></div></div></div></div></div>';
+                    }
+            }
+        } else {
+            echo '<div class="emptyMessage text-muted">no se a completado ningun curso</div>';
         }
     }
 
@@ -800,6 +849,7 @@ class cursos {
                 if (!empty($row["imagen"])) {
                     $img = "data:image/jpg;base64," . $img_str;
                 }
+                $progreso = $this->Progreso($row['curso_id'], $row['usuario']);
                 echo '<div class="card listaCard" onclick="Redirect("...")">
                                 <div class="row no-gutters">
                                     <div class="col-md-4">
@@ -809,16 +859,16 @@ class cursos {
                                     <div class="col-md-8">
                                         <div class="card-body">
                                             <h5 class="card-title">' . $row["usuario"] . '</h5>
-                                            <p class="card-text">
-                                                
-                                            </p>
+                                            <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: '. $progreso .'%;" aria-valuenow="'. $progreso .'" aria-valuemin="0" aria-valuemax="100">'. $progreso .'%</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>';
             }
         } else {
-            echo '<div class="emptyMessage text-muted">este curso no cuenta con contenido</div>';
+            echo '<div class="emptyMessage text-muted">este curso no tiene alumnos</div>';
         }
     }
 

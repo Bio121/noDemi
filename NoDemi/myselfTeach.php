@@ -95,29 +95,7 @@ session_start();
 
                         </div>
                         <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
-                            <div class="card listaCard" onclick="Redirect('preview.php')">
-                                <div class="row no-gutters">
-                                    <div class="col-md-4">
-                                        <img src="https://pbs.twimg.com/media/EdqjfxzXgAAdIgm?format=jpg&name=4096x4096"
-                                             class="card-img" alt="...">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title">El trabajo es demasiado complicado</h5>
-                                            <p class="card-text">
-                                                Resulta que el trabajo es muy difícil. No sabemos qué hacer al respecto,
-                                                pero sí
-                                                es muy complicado.
-                                                Pero, ¿qué hacer al respecto? Esa es una muy buena pregunta, ya veremos qué
-                                                se
-                                                podrá hacer al respecto.
-                                            </p>
-                                            <p class="card-text"><small class="text-muted">Última actualización hace 3
-                                                    minutos</small></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php $cur->misCursosCompradosCompletos($_SESSION["usuario"]); ?>
                         </div>
                         <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">
                             <?php $cur->misCursosComprados($_SESSION["usuario"]); ?>
