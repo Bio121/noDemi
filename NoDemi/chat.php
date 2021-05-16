@@ -176,7 +176,7 @@ session_start();
                     <div class="row no-gutters">
                         <div class="col">
                             <?php
-                            $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                            $img = "img/default.png";
                             if (!empty($conIMG)) {
                                 $img = "data:image/jpg;base64," . base64_encode($conIMG);
                             }

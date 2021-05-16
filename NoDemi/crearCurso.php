@@ -77,11 +77,9 @@ and open the template in the editor.
 
                 if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
                     $salioMal = '<div class="alert alert-danger my-3" role="alert"> El enlace introducido no es un enlace válido. </div>';
-                }else{
+                } else {
                     $news->archivos($url, 'link', $url, $_POST['nivel'], null, 'I');
                 }
-
-                
             }
 
             if (array_key_exists('existent', $_POST)) {
@@ -109,13 +107,17 @@ and open the template in the editor.
                     $imagen = addslashes($contenido);
                     fclose($fp);
                 } else {
-                    $imagen = $_SESSION["imagen"];
+                    $imagen = null;
                 }
-                echo $_POST["nombreCurso"] . $_POST["descCurso"] . $_POST["precioCurso"] . $_POST["incluyeCurso"];
                 $news->cursos($_SESSION["cursoActual"], $_POST["nombreCurso"], $_POST["descCurso"], $_POST["precioCurso"], $imagen, $_SESSION["usuario"], null, $_POST["incluyeCurso"], 'U');
+                
+                $diff = $_POST['dificultad'];
+                
+                $news->proc_dificultad($_SESSION["cursoActual"], $diff);
             }
 
-            if (array_key_exists('publish', $_POST)) {
+            if (array_key_exists('publish', $_POST) && !isset($_POST['videoLock'])) {
+
                 $news->cursos($_SESSION["cursoActual"], null, null, null, null, null, null, null, 'P');
             }
         }
@@ -130,6 +132,10 @@ and open the template in the editor.
                 $imagen2 = $row["imagen"];
                 $incluye = $row["incluye"];
                 $publicado = $row["publicado"];
+                $dificultad = $row['dificultad'];
+                if($dificultad == 'Novato')$rb1 = ' checked'; else $rb1 = '';
+                if($dificultad == 'Medio')$rb2 = ' checked'; else $rb2 = '';
+                if($dificultad == 'Experto')$rb3 = ' checked'; else $rb3 = '';
             }
         } else {
             echo "0 results";
@@ -142,8 +148,6 @@ and open the template in the editor.
             header('Location: index.php');
         }
         ?>
-
-        <script src="js/files.js"></script>
 
         <div class="contGlobal">
             <div class="mainContent">
@@ -197,24 +201,53 @@ and open the template in the editor.
                                 <label for="descCurso">Descripción corta</label>
                                 <input type="text" class="form-control campoConfig" id="descCurso" name="descCurso" placeholder="" value="<?php echo $desc; ?>" maxlength="100">
 
-                                <div class="col">    
-                                    <?php
-                                    $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
-                                    if (!empty($imagen2)) {
-                                        $img = "data:image/jpg;base64," . base64_encode($imagen2);
-                                    }
-                                    ?>
-                                    <img src="<?PHP echo $img; ?>"alt="Img" class="float-left imagenUserConfig"/>
+                                <div class="row mb-5">
+                                    <div class="col">    
+                                        <?php
+                                        $img = "img/default.png";
+                                        if (!empty($imagen2)) {
+                                            $img = "data:image/jpg;base64," . base64_encode($imagen2);
+                                        }
+                                        ?>
+                                        <img src="<?PHP echo $img; ?>"alt="Img" class="float-left imagenUserConfig"/>
 
-                                    <div class="custom-file">
+                                        <div class="custom-file">
 
-                                        <div class="btn btn-outline-secondary btn-rounded waves-effect float-left">
-                                            <input type="file" id="archivo" name="image"  accept="image/png,image/jpeg">
+                                            <div class="btn btn-outline-secondary btn-rounded waves-effect float-left">
+                                                <input type="file" id="archivo" name="image"  accept="image/png,image/jpeg">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col d-flex">
+                                        <div class="my-auto">
+                                            <div class="row text-center mb-5">
+                                                <h3>Elige el nivel de dificultad que identifica mejor este curso</h3>
+                                            </div>
+                                            <div class="row mt-5">
+                                                <div class="form-check mx-auto">
+                                                    <input class="form-check-input" type="radio" name="dificultad" id="novatoRadio" value="Novato" <?php echo $rb1; ?>>
+                                                    <label class="form-check-label" for="novatoRadio">
+                                                        Novato
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mx-auto">
+                                                    <input class="form-check-input" type="radio" name="dificultad" id="medioRadio" value="Medio" <?php echo $rb2; ?>>
+                                                    <label class="form-check-label" for="medioRadio">
+                                                        Medio
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mx-auto">
+                                                    <input class="form-check-input" type="radio" name="dificultad" id="expertoRadio" value="Experto" <?php echo $rb3; ?>>
+                                                    <label class="form-check-label" for="expertoRadio">
+                                                        Experto
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>
-                                </div><br><br>
-
+                                </div>
                                 <label for="incluyeCurso">Qué incluye</label>
                                 <input type="text" class="form-control campoConfig" id="incluyeCurso" name="incluyeCurso" placeholder=" " value="<?php echo $incluye; ?>" maxlength="255">
                                 <label for="precioCurso">Precio</label>
@@ -233,7 +266,7 @@ and open the template in the editor.
                             <button class="btn btn-primary btnConfig" type="button" onclick="" id="newClass">Añadir clase</button>
                             <br>
                             <form action="crearCurso.php" method="post" enctype='multipart/form-data'>
-                                <button class="btn btn-primary btnConfig btn-lg" type="submit" name="publish" value="publish">
+                                <button class="btn btn-primary btnConfig btn-lg" type="submit" name="publish" value="publish" id="vidCheck">
                                     <?php
                                     if ($publicado == 0)
                                         echo 'Publicar curso';
@@ -304,6 +337,8 @@ and open the template in the editor.
                 </div>
             </div>
         </div>
+
+        <script src="js/files.js"></script>
 
     </body>
 </html>

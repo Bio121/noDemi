@@ -25,12 +25,15 @@ function onWindowResize() {
 
 
 var classCounter = 0;
+var videoLock = 0;
 
 $(document).ready(function () {
 
     var actual = $('.textoOculto').text();
 
     var claveFinal = '-1';
+
+
 
     $('#newClass').click(function () {
         crearClase();
@@ -90,6 +93,14 @@ $(document).ready(function () {
     $('#borrarClase').click(function () {
         var codigo = $(this).siblings('.textoOculto').text();
         quitaClase(codigo);
+    });
+
+    $('#vidCheck').click(function () {
+        if (videoLock != 0) {
+            $(this).parents('form').append('<input type="text" name="videoLock" value="' + videoLock + '">')
+            alert('Todas las clases del curso deben tener al menos un video');
+            debugger;
+        }
     });
 
     traerClases();
@@ -192,6 +203,7 @@ $(document).ready(function () {
     function ponerClase(codigo, titulo, desc, calificacion) {
 
         classCounter++;
+        videoLock++;
 
         var htmlSTR = '<div class="unaClase c' + classCounter + '">';
         htmlSTR += '<div class="textoOculto">' + codigo + '</div>';
@@ -230,10 +242,13 @@ $(document).ready(function () {
             data: dataToSend,
             dataType: "json",
             success: function (data) {
-                debugger;
+                var fActive = false;
                 data.forEach(element => {
-                    ponerArchivo(element.ruta, element.tipoDato, element.nombre, element.clave, element.nivel, nActual);
+                    fActive = fActive || ponerArchivo(element.ruta, element.tipoDato, element.nombre, element.clave, element.nivel, nActual);
                 });
+                if (fActive) {
+                    videoLock--;
+                }
             },
             error: function (x, y, z) {
                 alert("Error del WebService: " + x + y + z);
@@ -269,7 +284,6 @@ $(document).ready(function () {
 
     function ponerArchivo(ruta, tipoDato, nombre, clave, nivel, id) {
 
-        debugger;
         var url;
 
         if (tipoDato.indexOf('image') == 0) {
@@ -292,6 +306,13 @@ $(document).ready(function () {
 
 
         $('#files' + id).append(htmlSTR);
+
+        var res = tipoDato.substring(0, 5);
+        if (res == 'video') {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 

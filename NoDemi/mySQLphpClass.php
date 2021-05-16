@@ -233,6 +233,15 @@ class mySQLphpClass extends configSQLphp {
         return $result;
     }
     
+    function proc_dificultad($curso, $dificultad) {
+        $this->connect();
+        $sql = "call proc_cursoDificultad(" . $this->varQuery($curso) . ", " . $this->varQuery($dificultad) . ");";
+        $result = $this->connectionString->query($sql);
+        $this->byebye();
+        //echo $sql;
+        return $result;
+    }
+    
     function get_cursoActualCategoriosos($cursoActual, $cantidad) {
         $this->connect();
         $sql = "call proc_CategoriasIgualesCurso('$cursoActual', $cantidad );";

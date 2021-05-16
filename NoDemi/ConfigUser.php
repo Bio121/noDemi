@@ -55,72 +55,70 @@ and open the template in the editor.
             }
 
 
-            if ((isset($_POST["ConfirmarCKB"]) || isset($_POST["bajaText"])) || ((isset($_POST["ConfirmarMCKB"]) || isset($_POST["maestroText"])))) {
-                if(isset($_POST["ConfirmarCKB"]) || isset($_POST["bajaText"])){
-                    $adios = true;
-                    if (!isset($_POST['ConfirmarCKB'])) {
-                        $Error1 = 'La cuenta no puede darse de baja sin marcar la casilla correspondiente<br>';
-                        $mal = true;
-                        $adios = false;
-                    }
-                    if ($_POST['bajaText'] != 'Dar de Baja mi cuenta') {
-                        $Error2 = 'La frase de seguridad debe corresponder para dar de baja la cuenta';
-                        $mal = true;
-                        $adios = false;
-                    }
-                    $nav->yesSession($_SESSION["usuario"], $_SESSION["privilegio"], $_SESSION["imagen"]);
-                    if ($adios) {
-                        $newUser = null;
-                        $nombre = null;
-                        $paterno = null;
-                        $materno = null;
-                        $correo = $_SESSION["correo"];
-                        $usuario = $_SESSION["usuario"];
-                        $contraseña = $_SESSION["contraseishon"];
-                        $confimacion = 'queImporta';
-                        $genero = null;
-                        $nacimiento = null;
-                        $imagen = $_SESSION["imagen"];
-                        $con = new mySQLphpClass();
-                        $con->usuarios($nombre, $paterno, $materno, $correo, $usuario, $contraseña, $imagen, $genero, $nacimiento, $_SESSION["privilegio"], $newUser, "0", 'b');
-                        session_unset();
-                        session_destroy();
-                        header('Location: index.php');
-                    }
+            if (isset($_POST["ConfirmarCKB"]) || isset($_POST["bajaText"])) {
+                $adios = true;
+                if (!isset($_POST['ConfirmarCKB'])) {
+                    $Error1 = 'La cuenta no puede darse de baja sin marcar la casilla correspondiente<br>';
+                    $mal = true;
+                    $adios = false;
                 }
-                else{
-                    $maestro = true;
-                    if (!isset($_POST['ConfirmarMCKB'])) {
-                        $Error1 = 'La cuenta no puede volverse de maestro sin marcar la casilla correspondiente<br>';
-                        $mal = true;
-                        $maestro = false;
-                    }
-                    if ($_POST['maestroText'] != 'Volverme maestro') {
-                        $Error2 = 'La frase de seguridad debe corresponder para volverse maestro';
-                        $mal = true;
-                        $maestro = false;
-                    }
-                    $nav->yesSession($_SESSION["usuario"], $_SESSION["privilegio"], $_SESSION["imagen"]);
-                    if ($maestro) {
-                        $newUser = null;
-                        $nombre = null;
-                        $paterno = null;
-                        $materno = null;
-                        $correo = $_SESSION["correo"];
-                        $usuario = $_SESSION["usuario"];
-                        $contraseña = $_SESSION["contraseishon"];
-                        $confimacion = 'queImporta';
-                        $genero = null;
-                        $nacimiento = null;
-                        $imagen = $_SESSION["imagen"];
-                        $con = new mySQLphpClass();
-                        $con->usuarios($nombre, $paterno, $materno, $correo, $usuario, $contraseña, $imagen, $genero, $nacimiento, "Maestro", $newUser, "0", 'u');
-                        $_SESSION["privilegio"] = "Maestro";
-
-                    }
+                if ($_POST['bajaText'] != 'Dar de Baja mi cuenta') {
+                    $Error2 = 'La frase de seguridad debe corresponder para dar de baja la cuenta';
+                    $mal = true;
+                    $adios = false;
                 }
+                $nav->yesSession($_SESSION["usuario"], $_SESSION["privilegio"], $_SESSION["imagen"]);
+                if ($adios) {
+                    $newUser = null;
+                    $nombre = null;
+                    $paterno = null;
+                    $materno = null;
+                    $correo = $_SESSION["correo"];
+                    $usuario = $_SESSION["usuario"];
+                    $contraseña = $_SESSION["contraseishon"];
+                    $confimacion = 'queImporta';
+                    $genero = null;
+                    $nacimiento = null;
+                    $imagen = $_SESSION["imagen"];
+                    $con = new mySQLphpClass();
+                    $con->usuarios($nombre, $paterno, $materno, $correo, $usuario, $contraseña, $imagen, $genero, $nacimiento, $_SESSION["privilegio"], $newUser, "0", 'b');
+                    session_unset();
+                    session_destroy();
+                    header('Location: index.php');
+                }
+            }
+            if (isset($_POST['evolve'])) {
                 
-            } else {
+                $maestro = true;
+                if (!isset($_POST['ConfirmarMCKB'])) {
+                    $Error1 = 'La cuenta no puede volverse de maestro sin marcar la casilla correspondiente<br>';
+                    $mal = true;
+                    $maestro = false;
+                }
+                if ($_POST['maestroText'] != 'Volverme maestro') {
+                    $Error2 = 'La frase de seguridad debe corresponder para volverse maestro';
+                    $mal = true;
+                    $maestro = false;
+                }
+                $nav->yesSession($_SESSION["usuario"], $_SESSION["privilegio"], $_SESSION["imagen"]);
+                if ($maestro) {
+                    $newUser = null;
+                    $nombre = null;
+                    $paterno = null;
+                    $materno = null;
+                    $correo = $_SESSION["correo"];
+                    $usuario = $_SESSION["usuario"];
+                    $contraseña = $_SESSION["contraseishon"];
+                    $confimacion = 'queImporta';
+                    $genero = null;
+                    $nacimiento = null;
+                    $imagen = $_SESSION["imagen"];
+                    $con = new mySQLphpClass();$con->usuarios(null, null, null, null, $_SESSION['usuario'], null, null, null, null, "Maestro", null, null, 'u');
+                    $_SESSION["privilegio"] = "Maestro";
+                }
+            }
+            
+            else {
                 $nav->yesSession($_SESSION["usuario"], $_SESSION["privilegio"], $_SESSION["imagen"]);
                 $newUser = $_SESSION["usuario"];
                 $nombre = $_POST["nombreConfig"];
@@ -134,12 +132,11 @@ and open the template in the editor.
                 $confimacion = $_POST["confirmarContraConfig"];
                 $genero = $_POST["generoConfig"];
                 $nacimiento = $_POST["nacimiento"];
-                
-                if(isset($_POST['imagen'])){
+
+                if (isset($_POST['imagen'])) {
                     $imash = base64_decode($_POST['imagen']);
                     $imagen = addslashes($imash);
-                }
-                else{
+                } else {
                     $imagen = $_SESSION['imagen'];
                 }
 
@@ -275,8 +272,8 @@ and open the template in the editor.
                             </form>
 
                             <?php
-                            //if ($_SESSION["privilegio"] == "Alumno") 
-                                echo '<br class="user-select-none">
+//if ($_SESSION["privilegio"] == "Alumno") 
+                            echo '<br class="user-select-none">
                                         <form action="ConfigUser.php" method="post" enctype="multipart/form-data">
                                             <input id="ConfirmarCKB" type="checkbox" name="ConfirmarCKB" value="No" class="user-select-none"/>
                                             <label for="ConfirmarCKB" class="user-select-none">Marca esta casilla si quieres dar de baja tu cuenta</label>
@@ -285,7 +282,6 @@ and open the template in the editor.
                                             <input type="text" class="form-control campoConfig" id="bajaText" name="bajaText">
                                             <button class="btn btn-primary btnBaja" type="submit" onclick="BajaUsuariro()">Darse de baja</button>
                                         </form>';
-                            
                             ?>
                             <?php
                             if ($_SESSION["privilegio"] == "Alumno") {
@@ -296,7 +292,7 @@ and open the template in the editor.
                                             <br class="user-select-none">
                                             <label for="maestroText">Copia y pega la frase "Volverme maestro" sin los "", en el siguiente campo</label>
                                             <input type="text" class="form-control campoConfig" id="maestroText" name="maestroText">
-                                            <button class="btn btn-primary " type="submit" onclick="">volverse maestro</button>
+                                            <button class="btn btn-primary " type="submit" onclick="" name="evolve">Volverse maestro</button>
                                         </form>';
                             }
                             ?>

@@ -35,13 +35,74 @@ session_start();
                 left: 0;
             }
             body{
-                height: fit-content;
-                width: fit-content;
+                overflow: none;
             }
         </style>
     </head>
 
     <body>
+
+        <?php
+        include 'mySQLphpClass.php';
+
+        $cl = new mySQLphpClass();
+
+        $error = false;
+        $errArr = array();
+
+        if (isset($_GET['cur']) && isset($_GET['user'])) {
+
+            $progresion = 0;
+            $res = $cl->progreso($_GET['cur'], $_GET['user']);
+            if ($res->num_rows > 0) {
+                while ($row = $res->fetch_assoc()) {
+                    $progresion = $row["progreso"];
+                }
+            }
+            echo $progresion;
+
+            if ($progresion == 100) {
+
+                $user = $cl->get_user($_GET['user']);
+                $nameUser = 'No funcionó';
+                if ($user->num_rows > 0) {
+                    while ($row = $user->fetch_assoc()) {
+                        $nameUser = $row['nombre'];
+                        if (empty($nameUser) || strlen($nameUser) < 3) {
+                            $error = true;
+                            array_push($errArr, 0);
+                        }
+                    }
+                }
+
+                $curso = $cl->get_curso_unique($_GET['cur']);
+                if ($curso->num_rows > 0) {
+                    while ($row = $curso->fetch_assoc()) {
+                        $nameCurso = $row['nombre'];
+                        if ($row['publicado'] == 0) {
+                            $error = true;
+                            array_push($errArr, 2);
+                        }
+                    }
+                }
+            }
+            else{
+                $error = true;
+            }
+
+            if ($error) {
+                $gerSTR = '';
+                foreach ($errArr as $row) {
+                    $getSTR = $gerSTR . 'err[]=' . $row . '&';
+                }
+                header('Location: ErrorPage.php?' . $getSTR);
+            }
+        }
+        else{
+            header('Location: ErrorPage.php');
+        }
+        ?>
+        
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
         <script src="js/PDFar.js"></script>
 
@@ -57,13 +118,12 @@ session_start();
                 <p class="empresa my-3">NoDemi</p>
                 <p class="titleCert">CERTIFICADO</p>
                 <p style="font-size: larger;" class="py-3"><strong>NoDemi tiene el gusto de certificar a:</strong></p>
-                <p class="cursive">Daniel Alejandro Jacobo Hernández</p>
+                <p class="cursive"><?php echo $nameUser; ?></p>
                 <div class="mt-5">
                     <p style="font-size: large;">Por haber concluído satisfactoriamente el curso:
                         <span>
                             <strong>
-                                Cómo aprender a raparse cada día de la
-                                vida.
+                                <?php echo $nameCurso; ?>
                             </strong>
                         </span>
                     </p>

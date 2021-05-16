@@ -485,7 +485,7 @@ class cursos {
         $result = $conn->get_misCursos($codigo, $usuario);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                $img = "img/default.png";
 
                 $img_str = base64_encode($row["imagen"]);
                 if (!empty($row["imagen"])) {
@@ -514,7 +514,7 @@ class cursos {
         $result = $conn->get_misCursos($codigo, $usuario);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                $img = "img/default.png";
 
                 $img_str = base64_encode($row["imagen"]);
                 if (!empty($row["imagen"])) {
@@ -561,7 +561,7 @@ class cursos {
         $result = $conn->get_misCursosComprados($usuario);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                $img = "img/default.png";
 
                 $img_str = base64_encode($row["imagen"]);
                 if (!empty($row["imagen"])) {
@@ -730,13 +730,14 @@ class cursos {
         $result = $conn->misAlumnos($usuario);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                $img = "img/default.png";
                 $img_str = base64_encode($row["imagen"]);
                 if (!empty($row["imagen"])) {
                     $img = "data:image/jpg;base64," . $img_str;
                 }
                 
-                $progreso = $this->Progreso($row['curso_id'], $usuario);
+                $progreso = $this->Progreso($row['curso_id'], $row['usuario']);
+                
                 
                 $redir = "redirect('chat.php?cur=" . $row['curso_id'] . "&user=" . $row['usuario'] . "')";
                 echo '<div class="card listaCard" onclick="' . $redir . '">
@@ -768,7 +769,7 @@ class cursos {
         $result = $conn->get_MaestroDelCurso($codigo);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                $img = "img/default.png";
                 
                 $redir = "redirect('chat.php?cur=" . $codigo . "&user=" . $row["usuario"] . "')";
 
@@ -793,7 +794,7 @@ class cursos {
         $result = $conn->misAlumnosCursos($usuario, $curso);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                $img = "img/default.png";
 
                 $img_str = base64_encode($row["imagen"]);
                 if (!empty($row["imagen"])) {
@@ -826,7 +827,7 @@ class cursos {
         $result = $conn->cursosVNC($cantidad, $opc);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+                $img = "img/default.png";
 
                 $img_str = base64_encode($row["imagen"]);
                 if (!empty($row["imagen"])) {
@@ -929,7 +930,7 @@ class navbar {
     function yesSession($nombre, $privilegio, $imagen) {
         $page = 'index.php';
         $profile = "";
-        $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+        $img = "img/default.png";
         if ($privilegio == 'Maestro') {
             $page = 'myselfTeach.php';
             $profile = "<a class='dropdown-item' href='" . $page . "'>Perfil</a>";
@@ -1419,7 +1420,7 @@ class comentarios {
     }
 
     private function HTMLify($row) {
-        $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+        $img = "img/default.png";
 
         $img_str = base64_encode($row["imagen"]);
         if (!empty($row["imagen"])) {
@@ -1476,7 +1477,7 @@ class comentarios {
     }
 
     private function HTMLifyDevMode($row, $respuesta) {
-        $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+        $img = "img/default.png";
         $responde = "";
         $enRespuesta = "";
         $replyBTN = '<div class="responder text-right user-select-none" data-toggle="modal" data-target="#modal' . $row["Clave"] . '">
@@ -1529,7 +1530,7 @@ class reporteros {
     }
 
     private function HTMLify($row) {
-        $img = "https://pbs.twimg.com/media/EiNYM5CWAAAh9PV?format=png&name=240x240";
+        $img = "img/default.png";
         if (isset($row["Imagen"])) {
             $img = "data:image/jpg;base64," . base64_encode($row["Imagen"]);
         }

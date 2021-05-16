@@ -675,15 +675,7 @@ p.titleCert {
 
 
 /*---------------css-------------*/
-label{ color:grey;}
 
-input[type = "radio"]{ display:none;}
-.clasificacion{
-    direction: rtl;
-    unicode-bidi: bidi-override;
-}
-label:hover{color:orange;}
-input[type = "radio"]:checked ~ label{color:orange;}
 #form {
     width: 50px;
     margin: 0 auto;
@@ -698,32 +690,10 @@ input[type = "radio"]:checked ~ label{color:orange;}
     font-size: 200px;
 }
 
-input[type="radio"] {
-    display: none;
-}
-
-#estrella{
-    font-size: 50px;
-    color: grey;
-
-}
-
 .clasificacion {
 
     direction: rtl;
     unicode-bidi: bidi-override;
-}
-
-#estrella:hover,
-#estrella:hover ~ #estrella {
-    font-size: 50px;
-    color: orange;
-}
-
-input[type="radio"]:checked ~ #estrella {
-    font-size: 50px;
-
-    color: orange;
 }
 
 .calificacionC{
